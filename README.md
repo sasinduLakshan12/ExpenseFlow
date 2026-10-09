@@ -61,15 +61,3 @@ npm run dev
 ```
 Frontend runs on: `http://localhost:5173`
 
----
-
-## 📅 Daily Progress Log
-
-- [x] **Day 1 (Oct 09, 2026)**: Architecture planning, Vite + React + Tailwind + React Router setup, Express backend initialization, MongoDB + Mongoose Schemas setup, Initial Git repository structure.
-- [ ] **Day 2 (Oct 10, 2026)**: User Registration, Login, JWT Authentication & Protected Routes.
-- [ ] **Day 3 (Oct 11, 2026)**: Income & Expense CRUD operations & Transaction Forms.
-- [ ] **Day 4 (Oct 12, 2026)**: Dashboard overview & Total Calculations, Search & Filter functionality.
-- [ ] **Day 5 (Oct 13, 2026)**: Monthly Budget manager & Chart visualizer.
-- [ ] **Day 6 (Oct 14, 2026)**: Responsive UI polish, Validation & Bug fixes.
-- [ ] **Day 7 (Oct 15, 2026)**: Final testing, Screenshots, GitHub polish, Demo Video recording.
-- [ ] **Day 8 (Oct 16, 2026)**: Submission before 3:00 PM.

@@ -35,6 +35,9 @@ app.get('/api/info', (req, res) => {
   });
 });
 
+// Authentication Routes
+app.use('/api/auth', require('./routes/authRoutes'));
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`🚀 ExpenseFlow Backend Server running on port ${PORT}`);

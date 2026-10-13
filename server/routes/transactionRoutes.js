@@ -1,0 +1,20 @@
+const express = require('express');
+const router = express.Router();
+const {
+  getTransactions,
+  addTransaction,
+  updateTransaction,
+  deleteTransaction
+} = require('../controllers/transactionController');
+const { protect } = require('../middleware/authMiddleware');
+
+// All transaction routes require valid JWT Bearer Token
+router.route('/')
+  .get(protect, getTransactions)
+  .post(protect, addTransaction);
+
+router.route('/:id')
+  .put(protect, updateTransaction)
+  .delete(protect, deleteTransaction);
+
+module.exports = router;

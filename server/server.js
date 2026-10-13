@@ -38,6 +38,9 @@ app.get('/api/info', (req, res) => {
 // Authentication Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 
+// Transaction Routes (Income & Expense CRUD)
+app.use('/api/transactions', require('./routes/transactionRoutes'));
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`🚀 ExpenseFlow Backend Server running on port ${PORT}`);

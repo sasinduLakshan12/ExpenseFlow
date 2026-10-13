@@ -12,9 +12,9 @@ import {
   Menu,
   X,
   ChevronDown,
-  ShieldCheck,
   Coins,
-  BadgeCheck,
+  Calendar,
+  CheckCircle2,
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -46,13 +46,13 @@ const Navbar = () => {
   const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
 
   return (
-    <nav className="bg-white/90 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-50 shadow-[0_2px_15px_rgba(0,0,0,0.03)] transition-all">
+    <nav className="bg-white/85 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-50 shadow-[0_2px_15px_rgba(0,0,0,0.03)] transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           
           {/* Logo & Brand Identity */}
           <div className="flex items-center space-x-3">
-            <div className="bg-indigo-600 text-white p-2 rounded-xl font-bold shadow-sm shadow-indigo-600/20 text-sm">
+            <div className="bg-gradient-to-tr from-indigo-600 to-purple-600 text-white p-2 rounded-xl font-bold shadow-sm shadow-indigo-600/20 text-sm">
               EF
             </div>
             <Link to="/" className="text-xl font-extrabold text-slate-800 tracking-tight">
@@ -60,7 +60,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation Links (Crisp & High-Contrast) */}
+          {/* Desktop Navigation Links */}
           {user && (
             <div className="hidden md:flex items-center space-x-1.5 bg-slate-100/70 p-1 rounded-2xl border border-slate-200/50">
               <NavLink
@@ -105,7 +105,7 @@ const Navbar = () => {
             </div>
           )}
 
-          {/* Right Section: Executive Profile Dropdown or Auth Buttons */}
+          {/* Right Section: Clean User-Focused Profile Dropdown */}
           <div className="flex items-center space-x-3">
             {user ? (
               <div className="relative" ref={dropdownRef}>
@@ -114,9 +114,8 @@ const Navbar = () => {
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                   className="flex items-center space-x-2.5 bg-white hover:bg-slate-50 border border-slate-200 pl-1.5 pr-3 py-1 rounded-full transition-all cursor-pointer shadow-2xs hover:border-slate-300"
                 >
-                  {/* Avatar Circle with Status Indicator */}
                   <div className="relative">
-                    <div className="w-7 h-7 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs shadow-xs ring-2 ring-indigo-50">
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center text-xs shadow-xs ring-2 ring-indigo-50">
                       {userInitial}
                     </div>
                     <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white"></span>
@@ -132,70 +131,56 @@ const Navbar = () => {
                   />
                 </button>
 
-                {/* Executive Frosted Glass Profile Dropdown (New Distinct Features, No Redundant Links) */}
+                {/* Clean, Non-Technical User Dropdown */}
                 {profileDropdownOpen && (
-                  <div className="absolute right-0 mt-2.5 w-72 bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-900/10 p-3 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3">
+                  <div className="absolute right-0 mt-2.5 w-64 bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-900/10 p-3 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-2.5">
                     
-                    {/* 1. User Header & Avatar */}
-                    <div className="flex items-center space-x-3 p-2 bg-slate-50/80 rounded-xl border border-slate-100">
-                      <div className="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-xs shrink-0 ring-2 ring-indigo-100">
+                    {/* User Info Card */}
+                    <div className="flex items-center space-x-3 p-2.5 bg-slate-50/80 rounded-xl border border-slate-100">
+                      <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center text-sm shadow-xs shrink-0 ring-2 ring-indigo-100">
                         {userInitial}
                       </div>
                       <div className="overflow-hidden">
-                        <div className="flex items-center space-x-1.5">
-                          <p className="text-xs sm:text-sm font-bold text-slate-800 truncate">{user.name}</p>
-                          <BadgeCheck size={14} className="text-indigo-600 shrink-0" />
-                        </div>
-                        <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
+                        <p className="text-xs sm:text-sm font-bold text-slate-800 truncate">{user.name}</p>
+                        <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
                       </div>
                     </div>
 
-                    {/* 2. Distinct Account Features & Settings (No repeated navbar links!) */}
+                    {/* Relevant Details for User (No tech jargon like JWT or Account tier) */}
                     <div className="space-y-1.5 text-xs">
                       
-                      {/* Currency Preference Feature */}
-                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/60 hover:bg-slate-50 transition-colors">
-                        <div className="flex items-center space-x-2.5 text-slate-600">
-                          <Coins size={15} className="text-amber-500" />
-                          <span className="font-medium">Currency</span>
+                      {/* Currency Display */}
+                      <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50/60">
+                        <div className="flex items-center space-x-2 text-slate-600">
+                          <Coins size={14} className="text-amber-500" />
+                          <span className="font-medium">Preferred Currency</span>
                         </div>
                         <span className="font-bold text-slate-800 bg-white px-2 py-0.5 rounded-md border border-slate-200 text-[11px]">
                           LKR (Rs)
                         </span>
                       </div>
 
-                      {/* Security Status Feature */}
-                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/60 hover:bg-slate-50 transition-colors">
-                        <div className="flex items-center space-x-2.5 text-slate-600">
-                          <ShieldCheck size={15} className="text-emerald-500" />
-                          <span className="font-medium">Security</span>
+                      {/* Account Status */}
+                      <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50/60">
+                        <div className="flex items-center space-x-2 text-slate-600">
+                          <CheckCircle2 size={14} className="text-emerald-500" />
+                          <span className="font-medium">Status</span>
                         </div>
-                        <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 text-[11px]">
-                          JWT Protected
-                        </span>
-                      </div>
-
-                      {/* Account Plan / Type */}
-                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/60 hover:bg-slate-50 transition-colors">
-                        <div className="flex items-center space-x-2.5 text-slate-600">
-                          <User size={15} className="text-indigo-500" />
-                          <span className="font-medium">Account Type</span>
-                        </div>
-                        <span className="font-semibold text-slate-600 text-[11px]">
-                          Personal Tier
+                        <span className="font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60 text-[11px]">
+                          Active Member
                         </span>
                       </div>
 
                     </div>
 
-                    {/* 3. Divider & Logout Action Button */}
+                    {/* Logout Button */}
                     <div className="pt-2 border-t border-slate-100">
                       <button
                         onClick={handleLogout}
                         className="w-full flex items-center justify-center space-x-2 bg-rose-50 hover:bg-rose-100/80 text-rose-600 font-semibold text-xs py-2.5 rounded-xl transition-all cursor-pointer"
                       >
                         <LogOut size={14} />
-                        <span>Sign Out of Account</span>
+                        <span>Sign Out</span>
                       </button>
                     </div>
 
@@ -221,7 +206,7 @@ const Navbar = () => {
               </>
             )}
 
-            {/* Mobile Hamburger Toggle (When Logged In) */}
+            {/* Mobile Hamburger Toggle */}
             {user && (
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -275,7 +260,7 @@ const Navbar = () => {
             </NavLink>
 
             <div className="pt-2 border-t border-slate-100 flex items-center justify-between px-3">
-              <span className="text-xs text-slate-500 font-medium">{user.name}</span>
+              <span className="text-xs text-slate-600 font-semibold">{user.name}</span>
               <button
                 onClick={handleLogout}
                 className="flex items-center space-x-1 text-xs text-rose-600 font-semibold py-1.5 px-2 hover:bg-rose-50 rounded-lg cursor-pointer"

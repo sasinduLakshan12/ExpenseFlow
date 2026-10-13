@@ -1,20 +1,22 @@
 const mongoose = require('mongoose');
 
-let isConnected = false;
-
 const connectDB = async () => {
-  if (isConnected) {
+  // If already connected, reuse connection
+  if (mongoose.connection.readyState >= 1) {
     return;
   }
 
+  const mongoURI = process.env.MONGO_URI || 'mongodb+srv://sasindu125lakshan_db_user:sasindu321@itcentercluster.lekl7es.mongodb.net/expenseflow?retryWrites=true&w=majority&appName=ITCenterCluster';
+
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/expenseflow');
-    isConnected = conn.connections[0].readyState;
+    const conn = await mongoose.connect(mongoURI, {
+      serverSelectionTimeoutMS: 8000,
+    });
     console.log(`🍃 MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`❌ MongoDB Connection Error: ${error.message}`);
+    throw error;
   }
 };
 
 module.exports = connectDB;
-

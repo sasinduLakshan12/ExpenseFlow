@@ -16,6 +16,16 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Ensure MongoDB connection is established before route handlers run
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(500).json({ message: 'Database connection failed', error: error.message });
+  }
+});
+
 // Health Check API Route
 app.get(['/api/health', '/health'], (req, res) => {
   res.status(200).json({

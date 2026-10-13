@@ -13,12 +13,27 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   Receipt,
-  PieChart,
+  PieChart as PieChartIcon,
+  BarChart3,
   RefreshCw,
   AlertCircle,
   PiggyBank,
   Sparkles,
+  Calendar,
 } from 'lucide-react';
+
+// Unified category color palette for the Spending Donut Chart
+const CATEGORY_COLORS = {
+  'Food & Dining': '#f43f5e', // Rose
+  'Rent & Housing': '#f59e0b', // Amber
+  'Transportation': '#0ea5e9', // Sky
+  'Utilities & Bills': '#8b5cf6', // Violet
+  'Entertainment': '#ec4899', // Pink
+  'Health & Medical': '#10b981', // Emerald
+  'Shopping': '#6366f1', // Indigo
+  'Education': '#14b8a6', // Teal
+  'Other Expense': '#64748b', // Slate
+};
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -60,39 +75,69 @@ const Dashboard = () => {
   const totalExpense = expenseList.reduce((acc, curr) => acc + Number(curr.amount || 0), 0);
   const netBalance = totalIncome - totalExpense;
 
-  // Financial Health Metrics
+  // Savings rate calculation
   const savingsRate =
     totalIncome > 0
-      ? Math.max(0, Math.round(((totalIncome - totalExpense) / totalIncome) * 100))
+      ? Math.max(0, Math.round(((totalIncome - totalExpense) / totalIncome) * 100 * 10) / 10)
       : 0;
 
-  const expenseRatio =
-    totalIncome > 0 ? Math.min(Math.round((totalExpense / totalIncome) * 100), 100) : 0;
+  // Category breakdown for the Donut Chart
+  const categoryTotals = {};
+  expenseList.forEach((t) => {
+    const cat = t.category || 'Other Expense';
+    categoryTotals[cat] = (categoryTotals[cat] || 0) + Number(t.amount || 0);
+  });
+
+  const categoryBreakdown = Object.keys(categoryTotals)
+    .map((cat) => ({
+      name: cat,
+      amount: categoryTotals[cat],
+      percent:
+        totalExpense > 0
+          ? Math.round((categoryTotals[cat] / totalExpense) * 100)
+          : 0,
+      color: CATEGORY_COLORS[cat] || '#6366f1',
+    }))
+    .sort((a, b) => b.amount - a.amount);
+
+  // SVG Donut Chart geometry
+  const radius = 52;
+  const circumference = 2 * Math.PI * radius; // ~326.7
+  let cumulativePercent = 0;
+
+  // Monthly Overview bar scaling
+  const maxBarValue = Math.max(totalIncome, totalExpense, 1);
+  const incomeBarHeight = Math.max(8, Math.round((totalIncome / maxBarValue) * 100));
+  const expenseBarHeight = Math.max(8, Math.round((totalExpense / maxBarValue) * 100));
 
   // Recent 5 transactions
   const recentTransactions = transactions.slice(0, 5);
 
   return (
-    <div className="space-y-8">
-      {/* Welcome Banner */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+    <div className="relative space-y-8">
+      {/* Ambient Frosted Glass Glow Orbs */}
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-400/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
+      <div className="absolute top-64 left-10 w-96 h-96 bg-purple-400/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+      {/* Top Banner & Header */}
+      <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
-          <div className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-3">
+          <div className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-2">
             <Sparkles size={14} className="text-indigo-600" />
-            <span>Financial Overview</span>
+            <span>Income and Expense Tracker</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
-            Welcome back, {user?.name || 'User'} 👋
+            Welcome back, {user?.name || 'User'}! 👋
           </h1>
           <p className="text-sm text-slate-500 mt-1">
-            Here is your live financial activity and net balance summary for this month.
+            Take control of your finances with real-time analytics and category insights.
           </p>
         </div>
 
         <div className="flex items-center space-x-3 shrink-0">
           <button
             onClick={() => handleOpenAddModal('expense')}
-            className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm shadow-indigo-500/25 transition-all cursor-pointer text-sm"
+            className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm shadow-indigo-500/25 hover:shadow-indigo-500/35 transition-all cursor-pointer text-sm"
           >
             <Plus size={16} />
             <span>Add Transaction</span>
@@ -100,7 +145,7 @@ const Dashboard = () => {
           <button
             onClick={fetchDashboardData}
             title="Refresh dashboard"
-            className="p-2.5 text-slate-400 hover:text-slate-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors cursor-pointer"
+            className="p-2.5 text-slate-400 hover:text-slate-600 bg-white/80 hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors cursor-pointer"
           >
             <RefreshCw size={16} />
           </button>
@@ -124,130 +169,273 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Top 3 Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Net Total Balance Card */}
-        <div className="bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-2xl p-6 shadow-md shadow-indigo-950/20 relative overflow-hidden flex flex-col justify-between">
-          <div className="absolute top-0 right-0 w-36 h-36 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
-
-          <div className="flex items-center justify-between relative z-10">
-            <span className="text-xs font-semibold uppercase tracking-wider text-indigo-200">
-              Total Net Balance
-            </span>
-            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-indigo-300">
-              <Wallet size={20} />
+      {/* 1. TOP 4 GLASS METRIC CARDS (Inspired by clean reference design) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        {/* Card 1: Total Balance */}
+        <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span>Total Balance</span>
+            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <Wallet size={16} />
             </div>
           </div>
-
-          <div className="my-4 relative z-10">
-            <h2 className="text-3xl font-extrabold tracking-tight">
+          <div className="my-3">
+            <h3 className="text-2xl font-extrabold text-slate-800 tracking-tight">
               {formatCurrency(netBalance)}
-            </h2>
-            <p className="text-xs text-indigo-200/80 mt-1 font-medium">
-              {netBalance >= 0 ? 'Surplus / Available Funds' : 'Deficit / Needs Attention'}
-            </p>
+            </h3>
           </div>
-
-          <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-indigo-200/90 relative z-10">
-            <span>Savings Rate:</span>
-            <span className="font-bold text-white">{savingsRate}% of Income</span>
+          <div className="flex items-center text-xs font-medium text-emerald-600 space-x-1">
+            <span className={netBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
+              {netBalance >= 0 ? '↑ Net Positive' : '↓ Net Deficit'}
+            </span>
+            <span className="text-slate-400">• Available funds</span>
           </div>
         </div>
 
-        {/* Total Income Card */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Total Income
-            </span>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <TrendingUp size={20} />
+        {/* Card 2: Monthly Income */}
+        <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span>Monthly Income</span>
+            <div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+              <TrendingUp size={16} />
             </div>
           </div>
-
-          <div className="my-4">
-            <h2 className="text-3xl font-extrabold text-emerald-600 tracking-tight">
+          <div className="my-3">
+            <h3 className="text-2xl font-extrabold text-sky-600 tracking-tight">
               + {formatCurrency(totalIncome)}
-            </h2>
-            <p className="text-xs text-slate-400 mt-1">
-              From {incomeList.length} recorded income {incomeList.length === 1 ? 'source' : 'sources'}
-            </p>
+            </h3>
           </div>
-
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Avg per Income:</span>
-            <span className="font-semibold text-slate-700">
-              {incomeList.length > 0
-                ? formatCurrency(totalIncome / incomeList.length)
-                : 'LKR 0.00'}
-            </span>
+          <div className="flex items-center text-xs text-slate-400 space-x-1">
+            <Calendar size={13} className="text-slate-400" />
+            <span>This month ({incomeList.length} sources)</span>
           </div>
         </div>
 
-        {/* Total Expenses Card */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              Total Expenses
-            </span>
-            <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
-              <TrendingDown size={20} />
+        {/* Card 3: Monthly Expenses */}
+        <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span>Monthly Expenses</span>
+            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
+              <TrendingDown size={16} />
             </div>
           </div>
-
-          <div className="my-4">
-            <h2 className="text-3xl font-extrabold text-rose-600 tracking-tight">
+          <div className="my-3">
+            <h3 className="text-2xl font-extrabold text-rose-600 tracking-tight">
               - {formatCurrency(totalExpense)}
-            </h2>
-            <p className="text-xs text-slate-400 mt-1">
-              Across {expenseList.length} spending {expenseList.length === 1 ? 'entry' : 'entries'}
-            </p>
+            </h3>
           </div>
-
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Avg per Expense:</span>
-            <span className="font-semibold text-slate-700">
-              {expenseList.length > 0
-                ? formatCurrency(totalExpense / expenseList.length)
-                : 'LKR 0.00'}
-            </span>
+          <div className="flex items-center text-xs text-slate-400 space-x-1">
+            <Calendar size={13} className="text-slate-400" />
+            <span>This month ({expenseList.length} spends)</span>
           </div>
         </div>
+
+        {/* Card 4: Savings Rate */}
+        <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            <span>Savings Rate</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <PiggyBank size={16} />
+            </div>
+          </div>
+          <div className="my-3">
+            <h3 className="text-2xl font-extrabold text-slate-800 tracking-tight">
+              {savingsRate}%
+            </h3>
+          </div>
+          <div className="flex items-center text-xs text-slate-400 space-x-1">
+            <span>% of total income retained</span>
+          </div>
+        </div>
+
       </div>
 
-      {/* Cashflow Spend Ratio Progress Bar */}
-      {totalIncome > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-semibold text-slate-700">
-              Income Utilization (Cash Flow Ratio)
-            </span>
-            <span className="font-bold text-slate-600">
-              {expenseRatio}% Spent ({formatCurrency(totalExpense)} of {formatCurrency(totalIncome)})
-            </span>
+      {/* 2. MID SECTION: TWO INTERACTIVE VISUAL ANALYTICS GLASS CARDS */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        
+        {/* Left Card: Spending by Category (Interactive Donut Chart) - 6 cols */}
+        <div className="lg:col-span-6 bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl p-6 sm:p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-800">
+                Spending by Category
+              </h2>
+              <p className="text-xs text-slate-400">Expense distribution across categories</p>
+            </div>
+            <div className="p-2 rounded-xl bg-indigo-50 text-indigo-600">
+              <PieChartIcon size={18} />
+            </div>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-            <div
-              className={`h-2.5 rounded-full transition-all duration-500 ${
-                expenseRatio > 85
-                  ? 'bg-rose-500'
-                  : expenseRatio > 60
-                  ? 'bg-amber-500'
-                  : 'bg-emerald-500'
-              }`}
-              style={{ width: `${expenseRatio}%` }}
-            ></div>
+
+          {loading ? (
+            <div className="py-16 text-center">
+              <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+              <p className="text-xs text-slate-400">Calculating breakdown...</p>
+            </div>
+          ) : expenseList.length === 0 ? (
+            <div className="py-14 text-center space-y-2">
+              <div className="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400">
+                <PieChartIcon size={26} />
+              </div>
+              <p className="text-sm font-semibold text-slate-600">No expenses recorded yet</p>
+              <p className="text-xs text-slate-400 max-w-xs mx-auto">
+                Add your daily expenses to see an automated category breakdown.
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-col sm:flex-row items-center justify-around gap-6 my-auto pt-2">
+              
+              {/* Pure SVG Donut Chart */}
+              <div className="relative w-44 h-44 shrink-0 flex items-center justify-center">
+                <svg className="w-full h-full transform -rotate-90 overflow-visible" viewBox="0 0 140 140">
+                  {/* Background track circle */}
+                  <circle
+                    cx="70"
+                    cy="70"
+                    r={radius}
+                    stroke="#f1f5f9"
+                    strokeWidth="18"
+                    fill="transparent"
+                  />
+                  {/* Donut Slices */}
+                  {categoryBreakdown.map((slice, index) => {
+                    const sliceFraction = slice.percent / 100;
+                    const strokeDasharray = `${sliceFraction * circumference} ${circumference}`;
+                    const strokeDashoffset = -cumulativePercent * circumference;
+                    cumulativePercent += sliceFraction;
+
+                    return (
+                      <circle
+                        key={slice.name}
+                        cx="70"
+                        cy="70"
+                        r={radius}
+                        stroke={slice.color}
+                        strokeWidth="18"
+                        strokeDasharray={strokeDasharray}
+                        strokeDashoffset={strokeDashoffset}
+                        fill="transparent"
+                        className="transition-all duration-500 hover:opacity-85"
+                      />
+                    );
+                  })}
+                </svg>
+
+                {/* Center Donut Label */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                  <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">
+                    Total Spent
+                  </span>
+                  <span className="text-sm font-bold text-slate-800 tracking-tight mt-0.5">
+                    {formatCurrency(totalExpense)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Category Legend List */}
+              <div className="w-full sm:w-auto space-y-2 max-h-48 overflow-y-auto pr-1">
+                {categoryBreakdown.map((cat) => (
+                  <div key={cat.name} className="flex items-center justify-between sm:space-x-4 text-xs">
+                    <div className="flex items-center space-x-2">
+                      <span
+                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        style={{ backgroundColor: cat.color }}
+                      ></span>
+                      <span className="text-slate-700 font-medium">{cat.name}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-right">
+                      <span className="font-semibold text-slate-800">{formatCurrency(cat.amount)}</span>
+                      <span className="text-slate-400 text-[11px] w-8 text-right font-mono">
+                        {cat.percent}%
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          )}
+        </div>
+
+        {/* Right Card: Monthly Overview (Comparative Income vs Expense Bar Chart) - 6 cols */}
+        <div className="lg:col-span-6 bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl p-6 sm:p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-base sm:text-lg font-bold text-slate-800">
+                Monthly Overview
+              </h2>
+              <p className="text-xs text-slate-400">Cash Flow: Income vs. Expenses comparison</p>
+            </div>
+            <div className="flex items-center space-x-3 text-xs">
+              <span className="flex items-center space-x-1.5 font-medium text-slate-600">
+                <span className="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+                <span>Income</span>
+              </span>
+              <span className="flex items-center space-x-1.5 font-medium text-slate-600">
+                <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                <span>Expenses</span>
+              </span>
+            </div>
+          </div>
+
+          {/* Bar Chart Container */}
+          <div className="my-auto pt-4 pb-2">
+            <div className="h-44 flex items-end justify-center space-x-10 sm:space-x-16 border-b border-slate-200/80 px-4">
+              
+              {/* Income Column */}
+              <div className="flex flex-col items-center space-y-2 h-full justify-end group">
+                <span className="text-xs font-bold text-sky-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {formatCurrency(totalIncome)}
+                </span>
+                <div
+                  className="w-14 sm:w-16 bg-gradient-to-t from-sky-600 to-sky-400 rounded-t-xl transition-all duration-700 shadow-sm shadow-sky-500/20"
+                  style={{ height: `${incomeBarHeight}%` }}
+                ></div>
+                <span className="text-xs font-semibold text-slate-600">Income</span>
+              </div>
+
+              {/* Expense Column */}
+              <div className="flex flex-col items-center space-y-2 h-full justify-end group">
+                <span className="text-xs font-bold text-rose-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                  {formatCurrency(totalExpense)}
+                </span>
+                <div
+                  className="w-14 sm:w-16 bg-gradient-to-t from-rose-600 to-rose-400 rounded-t-xl transition-all duration-700 shadow-sm shadow-rose-500/20"
+                  style={{ height: `${expenseBarHeight}%` }}
+                ></div>
+                <span className="text-xs font-semibold text-slate-600">Expenses</span>
+              </div>
+
+            </div>
+
+            {/* Bottom Status Tag */}
+            <div className="pt-4 flex items-center justify-between text-xs">
+              <span className="text-slate-500">Net Difference:</span>
+              <span
+                className={`font-bold px-3 py-1 rounded-full ${
+                  netBalance >= 0
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : 'bg-rose-50 text-rose-700 border border-rose-200'
+                }`}
+              >
+                {netBalance >= 0 ? '+ ' : ''}
+                {formatCurrency(netBalance)}
+              </span>
+            </div>
           </div>
         </div>
-      )}
 
-      {/* Two Column Section: Recent Activity & Quick Shortcuts */}
+      </div>
+
+      {/* 3. BOTTOM SECTION: RECENT TRANSACTIONS FEED (8 cols) & QUICK ACTIONS (4 cols) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Column: Recent Transactions Feed (8 cols) */}
-        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        
+        {/* Left Column: Recent Activity Feed (8 cols) */}
+        <div className="lg:col-span-8 bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-slate-800">Recent Transactions</h2>
+              <h2 className="text-base sm:text-lg font-bold text-slate-800">Recent Transactions</h2>
               <p className="text-xs text-slate-400 mt-0.5">Your latest 5 financial activities</p>
             </div>
             <Link
@@ -261,8 +449,8 @@ const Dashboard = () => {
 
           {loading ? (
             <div className="p-12 text-center">
-              <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-              <p className="text-sm text-slate-400">Loading live data...</p>
+              <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+              <p className="text-xs text-slate-400">Loading activity...</p>
             </div>
           ) : recentTransactions.length === 0 ? (
             <div className="p-10 text-center space-y-3">
@@ -293,17 +481,17 @@ const Dashboard = () => {
                   >
                     <div className="flex items-center space-x-3.5">
                       <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
                           isIncome
                             ? 'bg-emerald-100 text-emerald-600'
                             : 'bg-rose-100 text-rose-600'
                         }`}
                       >
-                        {isIncome ? <ArrowDownLeft size={18} /> : <ArrowUpRight size={18} />}
+                        {isIncome ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-slate-800">{item.title}</p>
-                        <p className="text-xs text-slate-400 mt-0.5">
+                        <p className="text-xs sm:text-sm font-semibold text-slate-800">{item.title}</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">
                           {formatDate(item.date)} •{' '}
                           <span className="font-medium text-slate-500">{item.category}</span>
                         </p>
@@ -312,7 +500,7 @@ const Dashboard = () => {
 
                     <div className="text-right">
                       <p
-                        className={`text-sm font-bold ${
+                        className={`text-xs sm:text-sm font-bold ${
                           isIncome ? 'text-emerald-600' : 'text-rose-600'
                         }`}
                       >
@@ -326,11 +514,10 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Right Column: Quick Shortcuts & Actions (4 cols) */}
-        <div className="lg:col-span-4 space-y-6">
-          {/* Quick Actions Card */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
-            <h3 className="text-sm font-bold text-slate-800">Quick Actions</h3>
+        {/* Right Column: Quick Action Cards (4 cols) */}
+        <div className="lg:col-span-4 space-y-5">
+          <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-4">
+            <h3 className="text-sm font-bold text-slate-800">Quick Shortcuts</h3>
 
             <div className="space-y-2.5">
               <button
@@ -351,10 +538,10 @@ const Dashboard = () => {
 
               <button
                 onClick={() => handleOpenAddModal('income')}
-                className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-emerald-200 bg-emerald-50/40 hover:bg-emerald-50/80 transition-all text-left cursor-pointer group"
+                className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-sky-200 bg-sky-50/40 hover:bg-sky-50/80 transition-all text-left cursor-pointer group"
               >
                 <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                  <div className="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
                     <TrendingUp size={16} />
                   </div>
                   <div>
@@ -362,7 +549,7 @@ const Dashboard = () => {
                     <p className="text-[11px] text-slate-400">Record salary, freelance, etc.</p>
                   </div>
                 </div>
-                <Plus size={16} className="text-slate-400 group-hover:text-emerald-600" />
+                <Plus size={16} className="text-slate-400 group-hover:text-sky-600" />
               </button>
 
               <Link
@@ -371,10 +558,10 @@ const Dashboard = () => {
               >
                 <div className="flex items-center space-x-3">
                   <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                    <PieChart size={16} />
+                    <PieChartIcon size={16} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-800">Manage Budgets</p>
+                    <p className="text-xs font-bold text-slate-800">Monthly Budgets</p>
                     <p className="text-[11px] text-slate-400">Set limits for categories</p>
                   </div>
                 </div>
@@ -382,21 +569,11 @@ const Dashboard = () => {
               </Link>
             </div>
           </div>
-
-          {/* Financial Tip Card */}
-          <div className="bg-gradient-to-br from-indigo-50 via-purple-50 to-slate-50 rounded-2xl border border-indigo-100/80 p-5 shadow-xs">
-            <div className="flex items-center space-x-2 text-indigo-700 font-bold text-xs mb-1.5">
-              <PiggyBank size={16} />
-              <span>Smart Money Tip</span>
-            </div>
-            <p className="text-xs text-slate-600 leading-relaxed font-normal">
-              Keeping your expenses under 70% of total income helps you build an emergency fund faster. Check your Budgets regularly to stay on target!
-            </p>
-          </div>
         </div>
+
       </div>
 
-      {/* Reusable Modal for adding transactions directly from Dashboard */}
+      {/* Modal for adding transactions */}
       <TransactionModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

@@ -35,11 +35,75 @@ const CATEGORY_COLORS = {
   'Other Expense': '#64748b', // Slate
 };
 
+// Luxury Physical Visa Card Styles (Balanced with light/frosted fintech palette - NO blue)
+const CARD_THEMES = {
+  platinum: {
+    id: 'platinum',
+    name: 'Platinum Silver',
+    wrapper: 'bg-gradient-to-br from-slate-100 via-zinc-200 to-slate-300 border border-slate-300/90 text-slate-800 shadow-md shadow-slate-300/40',
+    sheen: 'from-white/70 via-transparent to-white/20',
+    headerText: 'text-slate-800',
+    badge: 'border-slate-400/60 bg-white/70 text-slate-700',
+    wifi: 'text-slate-600',
+    balanceLabel: 'text-slate-500',
+    balanceText: 'text-slate-900',
+    footerNum: 'text-slate-500',
+    footerName: 'text-slate-800',
+    visaLogo: 'text-slate-900',
+    chipBorder: 'border-amber-700/40',
+    dot: 'bg-slate-300 border-slate-400',
+    desc: 'Light Brushed Titanium'
+  },
+  obsidian: {
+    id: 'obsidian',
+    name: 'Obsidian Slate',
+    wrapper: 'bg-gradient-to-br from-slate-900 via-slate-850 to-zinc-900 border border-slate-700/70 text-white shadow-lg shadow-slate-950/25',
+    sheen: 'from-white/10 via-transparent to-white/5',
+    headerText: 'text-zinc-200',
+    badge: 'border-zinc-700 bg-zinc-800/80 text-zinc-300',
+    wifi: 'text-zinc-300',
+    balanceLabel: 'text-zinc-400',
+    balanceText: 'text-white',
+    footerNum: 'text-zinc-400',
+    footerName: 'text-zinc-200',
+    visaLogo: 'text-white',
+    chipBorder: 'border-amber-500/50',
+    dot: 'bg-zinc-800 border-zinc-600',
+    desc: 'Deep Charcoal Slate'
+  },
+  emerald: {
+    id: 'emerald',
+    name: 'Emerald Signature',
+    wrapper: 'bg-gradient-to-br from-emerald-950 via-slate-900 to-teal-950 border border-emerald-800/60 text-emerald-50 shadow-lg shadow-emerald-950/25',
+    sheen: 'from-emerald-400/10 via-transparent to-emerald-200/5',
+    headerText: 'text-emerald-200',
+    badge: 'border-emerald-700/80 bg-emerald-900/60 text-emerald-300',
+    wifi: 'text-emerald-300',
+    balanceLabel: 'text-emerald-300/70',
+    balanceText: 'text-white',
+    footerNum: 'text-emerald-300/80',
+    footerName: 'text-emerald-100',
+    visaLogo: 'text-white',
+    chipBorder: 'border-amber-500/60',
+    dot: 'bg-emerald-900 border-emerald-600',
+    desc: 'Deep Forest & Gold'
+  }
+};
+
 const Dashboard = () => {
   const { user } = useAuth();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Card Theme State (Platinum Silver default for clean harmony with white UI)
+  const [cardTheme, setCardTheme] = useState(() => localStorage.getItem('ef_card_theme') || 'platinum');
+  const activeTheme = CARD_THEMES[cardTheme] || CARD_THEMES.platinum;
+
+  const handleThemeChange = (themeId) => {
+    setCardTheme(themeId);
+    localStorage.setItem('ef_card_theme', themeId);
+  };
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -166,66 +230,90 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* 1. HERO SECTION: REAL VISA METALLIC CARD + INCOME/EXPENSE SIDE SECTION */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+      {/* 1. HERO SECTION: BALANCED REAL VISA CARD + GROUPED CASH FLOW */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         
-        {/* LEFT COLUMN: AUTHENTIC REAL VISA METALLIC DEBIT CARD (Obsidian Titanium - No Blue) */}
-        <div className="lg:col-span-5 flex">
-          <div className="w-full bg-gradient-to-br from-zinc-900 via-neutral-900 to-black rounded-3xl p-6 sm:p-7 text-white shadow-2xl shadow-black/30 border border-white/15 relative overflow-hidden flex flex-col justify-between min-h-[240px]">
+        {/* LEFT COLUMN: REAL VISA CARD (4 cols - Exact same width as each card on the right) */}
+        <div className="lg:col-span-4 flex flex-col">
+          {/* Card Header & Chic Style Switcher */}
+          <div className="flex items-center justify-between mb-2 px-1">
+            <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              Primary Card
+            </span>
+            <div className="flex items-center space-x-1.5 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full border border-slate-200/90 shadow-2xs">
+              <span className="text-[10px] font-semibold text-slate-500 mr-0.5">Style:</span>
+              {Object.values(CARD_THEMES).map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => handleThemeChange(t.id)}
+                  title={`${t.name} (${t.desc})`}
+                  className={`w-3.5 h-3.5 rounded-full transition-all cursor-pointer border ${t.dot} ${
+                    cardTheme === t.id ? 'ring-2 ring-indigo-500 ring-offset-1 scale-110' : 'opacity-60 hover:opacity-100'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Authentic Real Visa Card (Realistic credit card aspect ratio ~1.58 : 1, no bloating) */}
+          <div
+            className={`w-full max-w-[360px] mx-auto lg:mx-0 h-[218px] rounded-2xl p-5 relative overflow-hidden flex flex-col justify-between transition-all duration-300 ${activeTheme.wrapper}`}
+          >
             {/* Metallic Sheen Reflections */}
-            <div className="absolute -top-16 -right-16 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
-            <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div className={`absolute -top-16 -right-16 w-44 h-44 bg-gradient-to-br ${activeTheme.sheen} rounded-full blur-2xl pointer-events-none`}></div>
 
             {/* Card Header: Brand & Contactless Icon */}
             <div className="flex items-center justify-between relative z-10">
               <div className="flex items-center space-x-2">
-                <span className="text-xs font-black tracking-widest uppercase text-zinc-300">
+                <span className={`text-xs font-black tracking-widest uppercase ${activeTheme.headerText}`}>
                   ExpenseFlow
                 </span>
-                <span className="text-[10px] font-semibold text-zinc-400 border border-zinc-700 px-1.5 py-0.2 rounded">
-                  PLATINUM
+                <span className={`text-[9px] font-bold border px-1.5 py-0.5 rounded ${activeTheme.badge}`}>
+                  {cardTheme === 'emerald' ? 'SIGNATURE' : 'PLATINUM'}
                 </span>
               </div>
-              <Wifi size={20} className="text-zinc-300 rotate-90" />
+              <Wifi size={17} className={`${activeTheme.wifi} rotate-90`} />
             </div>
 
-            {/* EMV Golden Chip & Balance Display */}
-            <div className="my-3 relative z-10 space-y-3">
-              {/* Golden EMV Chip */}
-              <div className="w-11 h-8 rounded-md bg-gradient-to-tr from-amber-200 via-amber-400 to-yellow-600 border border-amber-500/50 shadow-inner flex items-center justify-center p-1">
-                <div className="w-full h-full border border-amber-800/40 rounded-xs grid grid-cols-2 gap-0.5">
-                  <div className="border-r border-b border-amber-800/40"></div>
-                  <div className="border-b border-amber-800/40"></div>
-                  <div className="border-r border-amber-800/40"></div>
-                  <div></div>
+            {/* Golden Chip & Net Balance */}
+            <div className="my-auto relative z-10 space-y-1.5">
+              <div className="flex items-center justify-between">
+                {/* Golden EMV Chip */}
+                <div className={`w-9 h-6.5 rounded-md bg-gradient-to-tr from-amber-200 via-amber-400 to-yellow-600 border ${activeTheme.chipBorder} shadow-inner flex items-center justify-center p-0.5`}>
+                  <div className="w-full h-full border border-amber-800/40 rounded-xs grid grid-cols-2 gap-0.5">
+                    <div className="border-r border-b border-amber-800/40"></div>
+                    <div className="border-b border-amber-800/40"></div>
+                    <div className="border-r border-amber-800/40"></div>
+                    <div></div>
+                  </div>
                 </div>
+                <span className="text-[9px] font-mono tracking-wider opacity-60">DEBIT</span>
               </div>
 
-              {/* Total Balance on Card */}
               <div>
-                <p className="text-[11px] uppercase font-bold tracking-wider text-zinc-400">
+                <p className={`text-[10px] uppercase font-bold tracking-wider ${activeTheme.balanceLabel}`}>
                   Total Net Balance
                 </p>
-                <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white mt-0.5">
+                <h2 className={`text-2xl sm:text-[25px] font-black tracking-tight mt-0.5 ${activeTheme.balanceText}`}>
                   {formatCurrency(netBalance)}
                 </h2>
               </div>
             </div>
 
             {/* Card Footer: Cardholder, Number & VISA Logo */}
-            <div className="flex items-end justify-between relative z-10 pt-2 border-t border-white/10">
+            <div className="flex items-end justify-between relative z-10 pt-2 border-t border-black/5 dark:border-white/10">
               <div className="space-y-0.5">
-                <p className="text-[10px] uppercase font-mono text-zinc-400 tracking-wider">
+                <p className={`text-[10px] uppercase font-mono tracking-wider ${activeTheme.footerNum}`}>
                   •••• 4050
                 </p>
-                <p className="text-xs font-bold text-zinc-200 tracking-wider uppercase">
+                <p className={`text-xs font-bold tracking-wider uppercase ${activeTheme.footerName}`}>
                   {user?.name || 'Sasindu Lakshan'}
                 </p>
               </div>
 
               {/* VISA Logo */}
               <div className="text-right">
-                <span className="font-serif italic font-black text-2xl tracking-tighter text-white">
+                <span className={`font-serif italic font-black text-2xl tracking-tighter ${activeTheme.visaLogo}`}>
                   VISA
                 </span>
               </div>
@@ -233,74 +321,74 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: INCOME, EXPENSE & SAVINGS METRICS (Grouped together for clarity) */}
-        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4.5">
+        {/* RIGHT COLUMN: GROUPED METRICS (8 cols total, 2x2 grid = 4 cols each, matching card width) */}
+        <div className="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
           
-          {/* Card 1: Total Income (Vibrant Emerald) */}
-          <div className="bg-white/80 backdrop-blur-xl border border-emerald-100/90 hover:border-emerald-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+          {/* Card 1: Total Income (Emerald) */}
+          <div className="bg-white/85 backdrop-blur-xl border border-emerald-100 hover:border-emerald-200 rounded-2xl p-4 sm:p-4.5 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider">
               <span>Total Income</span>
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center">
-                <TrendingUp size={18} />
+              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center">
+                <TrendingUp size={16} />
               </div>
             </div>
-            <div className="my-2.5">
-              <h3 className="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight">
+            <div className="my-2">
+              <h3 className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">
                 + {formatCurrency(totalIncome)}
               </h3>
             </div>
-            <div className="pt-2 border-t border-slate-100 flex items-center text-xs font-medium text-slate-600 space-x-1.5">
-              <Calendar size={13} className="text-slate-500" />
+            <div className="pt-2 border-t border-slate-100 flex items-center text-[11px] font-medium text-slate-500 space-x-1.5">
+              <Calendar size={12} className="text-slate-400" />
               <span>This Month ({incomeList.length} recorded {incomeList.length === 1 ? 'deposit' : 'deposits'})</span>
             </div>
           </div>
 
-          {/* Card 2: Total Expenses (Vibrant Rose/Coral) */}
-          <div className="bg-white/80 backdrop-blur-xl border border-rose-100/90 hover:border-rose-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+          {/* Card 2: Total Expenses (Rose) */}
+          <div className="bg-white/85 backdrop-blur-xl border border-rose-100 hover:border-rose-200 rounded-2xl p-4 sm:p-4.5 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider">
               <span>Total Expenses</span>
-              <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center">
-                <TrendingDown size={18} />
+              <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center">
+                <TrendingDown size={16} />
               </div>
             </div>
-            <div className="my-2.5">
-              <h3 className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight">
+            <div className="my-2">
+              <h3 className="text-xl sm:text-2xl font-black text-rose-600 tracking-tight">
                 - {formatCurrency(totalExpense)}
               </h3>
             </div>
-            <div className="pt-2 border-t border-slate-100 flex items-center text-xs font-medium text-slate-600 space-x-1.5">
-              <Calendar size={13} className="text-slate-500" />
+            <div className="pt-2 border-t border-slate-100 flex items-center text-[11px] font-medium text-slate-500 space-x-1.5">
+              <Calendar size={12} className="text-slate-400" />
               <span>This Month ({expenseList.length} spending {expenseList.length === 1 ? 'entry' : 'entries'})</span>
             </div>
           </div>
 
           {/* Card 3: Savings Rate */}
-          <div className="bg-white/80 backdrop-blur-xl border border-purple-100/90 hover:border-purple-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+          <div className="bg-white/85 backdrop-blur-xl border border-purple-100 hover:border-purple-200 rounded-2xl p-4 sm:p-4.5 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider">
               <span>Savings Rate</span>
-              <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center">
-                <PiggyBank size={18} />
+              <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center">
+                <PiggyBank size={16} />
               </div>
             </div>
-            <div className="my-2.5">
-              <h3 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">
+            <div className="my-2">
+              <h3 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">
                 {savingsRate}%
               </h3>
             </div>
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-600">
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-slate-500">
               <span>Retained from income</span>
-              <span className="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded text-[11px]">
+              <span className="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded text-[10px]">
                 {savingsRate >= 20 ? 'Optimal' : 'Building'}
               </span>
             </div>
           </div>
 
-          {/* Card 4: Net Cash Flow Status */}
-          <div className="bg-white/80 backdrop-blur-xl border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+          {/* Card 4: Cash Flow Health */}
+          <div className="bg-white/85 backdrop-blur-xl border border-slate-200/90 rounded-2xl p-4 sm:p-4.5 shadow-2xs flex flex-col justify-between">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider">
               <span>Cash Flow Health</span>
               <span
-                className={`text-[11px] font-bold px-2 py-0.5 rounded-md ${
+                className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
                   netBalance >= 0
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     : 'bg-rose-50 text-rose-700 border border-rose-200'
@@ -309,17 +397,17 @@ const Dashboard = () => {
                 {netBalance >= 0 ? 'Surplus' : 'Deficit'}
               </span>
             </div>
-            <div className="my-2.5">
+            <div className="my-2">
               <h4
-                className={`text-xl font-bold tracking-tight ${
+                className={`text-lg sm:text-xl font-bold tracking-tight ${
                   netBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'
                 }`}
               >
                 {netBalance >= 0 ? '+' : ''} {formatCurrency(netBalance)}
               </h4>
             </div>
-            <div className="pt-2 border-t border-slate-100 text-xs font-medium text-slate-500">
-              {netBalance >= 0 ? 'You are within a positive cash margin' : 'Expenses currently exceed total income'}
+            <div className="pt-2 border-t border-slate-100 text-[11px] font-medium text-slate-500">
+              {netBalance >= 0 ? 'Positive cash surplus margin' : 'Expenses currently exceed total income'}
             </div>
           </div>
 

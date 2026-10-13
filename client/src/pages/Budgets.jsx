@@ -353,7 +353,7 @@ const Budgets = () => {
                 summary.isOverallExceeded ? 'text-rose-600' : 'text-emerald-600'
               }`}
             >
-              {summary.isOverallExceeded ? '-' : ''} {formatCurrency(summary.totalRemaining)}
+              {formatCurrency(summary.totalRemaining)}
             </h3>
           </div>
           <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-500">

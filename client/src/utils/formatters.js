@@ -1,12 +1,14 @@
-// Currency formatter for Sri Lankan Rupee (LKR)
+// Standardized currency formatter for Sri Lankan Rupee (LKR)
+// Guarantees consistent "LKR X,XXX.XX" / "-LKR X,XXX.XX" output across all browsers, locales, and operating systems
 export const formatCurrency = (amount) => {
   const numericAmount = Number(amount) || 0;
-  return new Intl.NumberFormat('en-LK', {
-    style: 'currency',
-    currency: 'LKR',
+  const isNegative = numericAmount < 0;
+  const formatted = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(numericAmount);
+  }).format(Math.abs(numericAmount));
+
+  return isNegative ? `-LKR ${formatted}` : `LKR ${formatted}`;
 };
 
 // Date formatter (e.g., "Oct 11, 2026")

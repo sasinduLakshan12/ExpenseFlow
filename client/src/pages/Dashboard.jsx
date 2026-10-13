@@ -403,7 +403,7 @@ const Dashboard = () => {
                   netBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'
                 }`}
               >
-                {netBalance >= 0 ? '+' : ''} {formatCurrency(netBalance)}
+                {netBalance >= 0 ? `+ ${formatCurrency(netBalance)}` : formatCurrency(netBalance)}
               </h4>
             </div>
             <div className="pt-2 border-t border-slate-100 text-[11px] font-medium text-slate-500">

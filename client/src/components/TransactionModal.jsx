@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, ArrowDownCircle, ArrowUpCircle, Calendar, Tag, FileText, DollarSign, AlertCircle } from 'lucide-react';
+import { X, ArrowDownCircle, ArrowUpCircle, Calendar, Tag, FileText, AlertCircle } from 'lucide-react';
 import { createTransaction, updateTransaction } from '../services/transactionService';
 import { INCOME_CATEGORIES, EXPENSE_CATEGORIES } from '../utils/formatters';
 
@@ -179,7 +179,9 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
                 Amount (LKR)
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-3 text-slate-400" size={18} />
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+                  LKR
+                </span>
                 <input
                   type="number"
                   step="0.01"
@@ -187,7 +189,7 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                  className="w-full pl-12 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all font-semibold"
                 />
               </div>
             </div>

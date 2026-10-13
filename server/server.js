@@ -45,6 +45,11 @@ app.use('/api/transactions', require('./routes/transactionRoutes'));
 app.use('/api/budgets', require('./routes/budgetRoutes'));
 
 // Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 ExpenseFlow Backend Server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 ExpenseFlow Backend Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
+

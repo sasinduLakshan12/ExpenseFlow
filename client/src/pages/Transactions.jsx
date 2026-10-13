@@ -214,7 +214,7 @@ const Transactions = () => {
                           </div>
                           <div>
                             <p className="font-semibold text-slate-800">{item.title}</p>
-                            {item.note && (
+                            {item.note && item.note !== item.title && (
                               <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">{item.note}</p>
                             )}
                           </div>

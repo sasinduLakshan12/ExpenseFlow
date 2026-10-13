@@ -655,8 +655,12 @@ const Dashboard = () => {
                     <div>
                       <p className="text-xs sm:text-sm font-semibold text-slate-800">{item.title}</p>
                       <p className="text-[11px] text-slate-500 mt-0.5 font-medium">
-                        {formatDate(item.date)} •{' '}
-                        <span className="font-semibold text-slate-700">{item.category}</span>
+                        {formatDate(item.date)}
+                        {item.title !== item.category && (
+                          <>
+                            {' '}• <span className="font-semibold text-slate-700">{item.category}</span>
+                          </>
+                        )}
                       </p>
                     </div>
                   </div>

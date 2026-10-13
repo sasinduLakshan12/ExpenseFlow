@@ -8,22 +8,18 @@ import {
   FileText,
   AlertCircle,
   ChevronDown,
-  ListFilter,
-  Edit3,
 } from 'lucide-react';
 import { createTransaction, updateTransaction } from '../services/transactionService';
-import { INCOME_CATEGORIES, EXPENSE_CATEGORIES, TITLE_PRESETS } from '../utils/formatters';
+import { INCOME_CATEGORIES, EXPENSE_CATEGORIES } from '../utils/formatters';
 
 const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null }) => {
   const isEditing = Boolean(transactionToEdit);
 
   const [type, setType] = useState('expense');
-  const [title, setTitle] = useState('');
-  const [isCustomTitle, setIsCustomTitle] = useState(false);
-  const [amount, setAmount] = useState('');
   const [category, setCategory] = useState(EXPENSE_CATEGORIES[0]);
+  const [amount, setAmount] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [note, setNote] = useState('');
+  const [description, setDescription] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -31,44 +27,38 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
   useEffect(() => {
     if (transactionToEdit) {
       const editType = transactionToEdit.type || 'expense';
-      const editTitle = transactionToEdit.title || '';
       setType(editType);
-      setTitle(editTitle);
       setAmount(transactionToEdit.amount || '');
-      setCategory(transactionToEdit.category || (editType === 'income' ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0]));
+      setCategory(
+        transactionToEdit.category ||
+          (editType === 'income' ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0])
+      );
       setDate(
         transactionToEdit.date
           ? new Date(transactionToEdit.date).toISOString().split('T')[0]
           : new Date().toISOString().split('T')[0]
       );
-      setNote(transactionToEdit.note || '');
-
-      // Check if existing title is present in current presets
-      const allPresets = (TITLE_PRESETS[editType] || []).flatMap((g) => g.titles);
-      if (editTitle && !allPresets.includes(editTitle)) {
-        setIsCustomTitle(true);
-      } else {
-        setIsCustomTitle(false);
-      }
+      // Populate optional description from note or custom title
+      const initialDesc =
+        transactionToEdit.note ||
+        (transactionToEdit.title && transactionToEdit.title !== transactionToEdit.category
+          ? transactionToEdit.title
+          : '');
+      setDescription(initialDesc);
     } else {
       // Default reset
       setType('expense');
-      setTitle('');
-      setIsCustomTitle(false);
-      setAmount('');
       setCategory(EXPENSE_CATEGORIES[0]);
+      setAmount('');
       setDate(new Date().toISOString().split('T')[0]);
-      setNote('');
+      setDescription('');
     }
     setError('');
   }, [transactionToEdit, isOpen]);
 
-  // When type changes (Income <-> Expense), switch default category & reset title
+  // When type changes (Income <-> Expense), switch default category
   const handleTypeChange = (newType) => {
     setType(newType);
-    if (!isCustomTitle) {
-      setTitle('');
-    }
     if (newType === 'income') {
       setCategory(INCOME_CATEGORIES[0]);
     } else {
@@ -76,32 +66,9 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
     }
   };
 
-  // Handle preset dropdown selection
-  const handlePresetSelect = (e) => {
-    const val = e.target.value;
-    if (val === '__custom__') {
-      setIsCustomTitle(true);
-      setTitle('');
-    } else {
-      setTitle(val);
-      // Auto-set matching category if preset belongs to a known category group
-      const groups = TITLE_PRESETS[type] || [];
-      const matched = groups.find((g) => g.titles.includes(val));
-      if (matched && matched.category) {
-        setCategory(matched.category);
-      }
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    // Validations
-    if (!title.trim()) {
-      setError('Please provide a transaction title');
-      return;
-    }
 
     const numAmount = Number(amount);
     if (!amount || isNaN(numAmount) || numAmount <= 0) {
@@ -116,13 +83,14 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
 
     try {
       setLoading(true);
+      const cleanDesc = description.trim();
       const payload = {
-        title: title.trim(),
+        title: cleanDesc || category,
         amount: numAmount,
         type,
         category,
         date,
-        note: note.trim(),
+        note: cleanDesc,
       };
 
       if (isEditing) {
@@ -197,107 +165,8 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
             </button>
           </div>
 
-          {/* Title Input / Dropdown Selector */}
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500">
-                Title / Description
-              </label>
-              <button
-                type="button"
-                onClick={() => setIsCustomTitle(!isCustomTitle)}
-                className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center space-x-1 cursor-pointer"
-              >
-                {isCustomTitle ? (
-                  <>
-                    <ListFilter size={13} />
-                    <span>Choose from List</span>
-                  </>
-                ) : (
-                  <>
-                    <Edit3 size={13} />
-                    <span>Type Custom Title</span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            <div className="relative">
-              <FileText className="absolute left-3 top-3 text-slate-400 pointer-events-none" size={18} />
-              {isCustomTitle ? (
-                <div className="relative">
-                  <input
-                    type="text"
-                    required
-                    autoFocus
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder={
-                      type === 'income'
-                        ? 'e.g. Monthly Salary, Freelance project'
-                        : 'e.g. Grocery shopping, Electricity bill'
-                    }
-                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setIsCustomTitle(false)}
-                    title="Switch back to preset dropdown"
-                    className="absolute right-2.5 top-2.5 text-slate-400 hover:text-indigo-600 p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-                  >
-                    <ListFilter size={16} />
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <select
-                    required
-                    value={title}
-                    onChange={handlePresetSelect}
-                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all appearance-none cursor-pointer"
-                  >
-                    <option value="" disabled>
-                      -- Select Title / Description --
-                    </option>
-                    {(TITLE_PRESETS[type] || []).map((group) => (
-                      <optgroup key={group.category} label={group.category}>
-                        {group.titles.map((presetTitle) => (
-                          <option key={presetTitle} value={presetTitle}>
-                            {presetTitle}
-                          </option>
-                        ))}
-                      </optgroup>
-                    ))}
-                    <option value="__custom__">✏️ Custom / Other (Type your own)...</option>
-                  </select>
-                  <ChevronDown className="absolute right-3 top-3 text-slate-400 pointer-events-none" size={18} />
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Amount and Category Grid */}
+          {/* Category & Amount Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
-                Amount (LKR)
-              </label>
-              <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
-                  LKR
-                </span>
-                <input
-                  type="number"
-                  step="0.01"
-                  required
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="0.00"
-                  className="w-full pl-12 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all font-semibold"
-                />
-              </div>
-            </div>
-
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
                 Category
@@ -318,37 +187,65 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
                 <ChevronDown className="absolute right-3 top-3 text-slate-400 pointer-events-none" size={18} />
               </div>
             </div>
-          </div>
 
-          {/* Date Picker */}
-          <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
-              Transaction Date
-            </label>
-            <div className="relative">
-              <Calendar className="absolute left-3 top-3 text-slate-400" size={18} />
-              <input
-                type="date"
-                required
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all cursor-pointer"
-              />
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                Amount (LKR)
+              </label>
+              <div className="relative">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">
+                  LKR
+                </span>
+                <input
+                  type="number"
+                  step="0.01"
+                  required
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.00"
+                  className="w-full pl-12 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all font-semibold"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Optional Notes */}
-          <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
-              Note (Optional)
-            </label>
-            <textarea
-              rows="2"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Add optional details..."
-              className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all resize-none"
-            ></textarea>
+          {/* Date & Optional Description Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                Transaction Date
+              </label>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-3 text-slate-400 pointer-events-none" size={18} />
+                <input
+                  type="date"
+                  required
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all cursor-pointer"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
+                Description / Note <span className="text-[10px] text-slate-400 font-normal lowercase">(optional)</span>
+              </label>
+              <div className="relative">
+                <FileText className="absolute left-3 top-3 text-slate-400 pointer-events-none" size={18} />
+                <input
+                  type="text"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder={
+                    type === 'income'
+                      ? 'e.g. October Bonus, Client A'
+                      : 'e.g. Keells Super, CEB Bill, Lunch'
+                  }
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Modal Actions */}

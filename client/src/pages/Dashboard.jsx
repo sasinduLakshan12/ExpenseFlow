@@ -623,21 +623,14 @@ const Dashboard = () => {
             <p className="text-xs font-medium text-slate-500">Loading activity...</p>
           </div>
         ) : recentTransactions.length === 0 ? (
-          <div className="p-10 text-center space-y-3">
-            <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto">
+          <div className="p-10 text-center space-y-2">
+            <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-1">
               <Receipt size={24} />
             </div>
             <h3 className="text-sm font-semibold text-slate-700">No transactions recorded yet</h3>
             <p className="text-xs text-slate-500 max-w-xs mx-auto font-medium">
-              Start tracking your cash flow by recording your first income or expense entry.
+              Start tracking your cash flow by recording your first income or expense entry with the "+ New Entry" button above.
             </p>
-            <button
-              onClick={() => handleOpenAddModal('expense')}
-              className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all shadow-xs cursor-pointer"
-            >
-              <Plus size={14} />
-              <span>Add First Transaction</span>
-            </button>
           </div>
         ) : (
           <div className="divide-y divide-slate-100">

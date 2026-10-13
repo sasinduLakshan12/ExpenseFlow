@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Edit2, Trash2, ArrowUpRight, ArrowDownLeft, AlertCircle, RefreshCw } from 'lucide-react';
+import { Plus, Search, Filter, Edit2, Trash2, ArrowUpRight, ArrowDownLeft, AlertCircle, RefreshCw, Receipt } from 'lucide-react';
 import { getTransactions, deleteTransaction } from '../services/transactionService';
 import { formatCurrency, formatDate, INCOME_CATEGORIES, EXPENSE_CATEGORIES } from '../utils/formatters';
 import TransactionModal from '../components/TransactionModal';
@@ -171,23 +171,16 @@ const Transactions = () => {
             <p className="text-sm text-slate-500">Loading transactions...</p>
           </div>
         ) : filteredTransactions.length === 0 ? (
-          <div className="p-12 text-center">
-            <div className="w-14 h-14 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Plus size={28} />
+          <div className="p-12 text-center space-y-2">
+            <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-2">
+              <Receipt size={24} />
             </div>
             <h3 className="text-base font-semibold text-slate-800">No transactions found</h3>
-            <p className="text-sm text-slate-500 max-w-sm mx-auto mt-1 mb-5">
+            <p className="text-sm text-slate-500 max-w-sm mx-auto">
               {searchTerm || filterType !== 'all' || filterCategory !== 'All'
                 ? 'Try adjusting your filters or search keyword.'
-                : 'Start tracking by recording your first income or expense!'}
+                : 'Use the "+ Add Transaction" button above to record your first income or expense.'}
             </p>
-            <button
-              onClick={handleOpenAddModal}
-              className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4.5 py-2.5 rounded-xl transition-all shadow-sm shadow-indigo-500/25 cursor-pointer"
-            >
-              <Plus size={16} />
-              <span>Add Your First Transaction</span>
-            </button>
           </div>
         ) : (
           <div className="overflow-x-auto">

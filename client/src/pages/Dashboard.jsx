@@ -5,7 +5,6 @@ import { getTransactions } from '../services/transactionService';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import TransactionModal from '../components/TransactionModal';
 import {
-  Wallet,
   TrendingUp,
   TrendingDown,
   Plus,
@@ -18,6 +17,9 @@ import {
   AlertCircle,
   PiggyBank,
   Calendar,
+  Wifi,
+  Sparkles,
+  CreditCard,
 } from 'lucide-react';
 
 // Cohesive, vibrant fintech palette for spending categories
@@ -113,19 +115,19 @@ const Dashboard = () => {
 
   return (
     <div className="relative space-y-8 pt-1">
-      {/* Ambient Frosted Glass Background Lights (Creates the authentic colorful glass reflection) */}
-      <div className="absolute top-[-30px] left-[10%] w-[420px] h-[420px] bg-indigo-500/12 rounded-full blur-[80px] pointer-events-none -z-10"></div>
-      <div className="absolute top-[120px] right-[5%] w-[400px] h-[400px] bg-purple-500/12 rounded-full blur-[80px] pointer-events-none -z-10"></div>
-      <div className="absolute top-[480px] left-[25%] w-[450px] h-[450px] bg-sky-400/10 rounded-full blur-[90px] pointer-events-none -z-10"></div>
+      {/* Ambient Soft Frosted Glass Background Lights */}
+      <div className="absolute top-[-30px] left-[10%] w-[420px] h-[420px] bg-indigo-500/10 rounded-full blur-[80px] pointer-events-none -z-10"></div>
+      <div className="absolute top-[140px] right-[5%] w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[80px] pointer-events-none -z-10"></div>
+      <div className="absolute top-[480px] left-[25%] w-[450px] h-[450px] bg-emerald-400/8 rounded-full blur-[90px] pointer-events-none -z-10"></div>
 
-      {/* Top Header (Clean, Human & Free of generic AI clichés) */}
+      {/* Top Welcome Header */}
       <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl p-6 sm:p-7 shadow-[0_4px_25px_rgba(0,0,0,0.03)] flex flex-col md:flex-row md:items-center md:justify-between gap-5">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
             Welcome back, {user?.name || 'User'} 👋
           </h1>
           <p className="text-sm font-medium text-slate-600 mt-1">
-            Here is your live financial activity and category spending overview.
+            Real-time balance, categorized spending, and cash flow overview.
           </p>
         </div>
 
@@ -164,93 +166,163 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* 1. TOP 4 SHARP, HIGH-CONTRAST FROSTED GLASS STAT CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      {/* 1. HERO SECTION: REAL VISA METALLIC CARD + INCOME/EXPENSE SIDE SECTION */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
-        {/* Card 1: Total Net Balance (Vibrant Luxury Indigo Glass Card) */}
-        <div className="bg-gradient-to-br from-indigo-700 via-indigo-800 to-purple-900 text-white rounded-2xl p-5 shadow-lg shadow-indigo-600/25 relative overflow-hidden flex flex-col justify-between border border-indigo-400/30">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none"></div>
+        {/* LEFT COLUMN: AUTHENTIC REAL VISA METALLIC DEBIT CARD (Obsidian Titanium - No Blue) */}
+        <div className="lg:col-span-5 flex">
+          <div className="w-full bg-gradient-to-br from-zinc-900 via-neutral-900 to-black rounded-3xl p-6 sm:p-7 text-white shadow-2xl shadow-black/30 border border-white/15 relative overflow-hidden flex flex-col justify-between min-h-[240px]">
+            {/* Metallic Sheen Reflections */}
+            <div className="absolute -top-16 -right-16 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
-          <div className="flex items-center justify-between relative z-10">
-            <span className="text-xs font-bold uppercase tracking-wider text-indigo-100">
-              Total Net Balance
-            </span>
-            <div className="w-8 h-8 rounded-lg bg-white/15 text-white flex items-center justify-center">
-              <Wallet size={16} />
+            {/* Card Header: Brand & Contactless Icon */}
+            <div className="flex items-center justify-between relative z-10">
+              <div className="flex items-center space-x-2">
+                <span className="text-xs font-black tracking-widest uppercase text-zinc-300">
+                  ExpenseFlow
+                </span>
+                <span className="text-[10px] font-semibold text-zinc-400 border border-zinc-700 px-1.5 py-0.2 rounded">
+                  PLATINUM
+                </span>
+              </div>
+              <Wifi size={20} className="text-zinc-300 rotate-90" />
             </div>
-          </div>
 
-          <div className="my-3 relative z-10">
-            <h3 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              {formatCurrency(netBalance)}
-            </h3>
-          </div>
+            {/* EMV Golden Chip & Balance Display */}
+            <div className="my-3 relative z-10 space-y-3">
+              {/* Golden EMV Chip */}
+              <div className="w-11 h-8 rounded-md bg-gradient-to-tr from-amber-200 via-amber-400 to-yellow-600 border border-amber-500/50 shadow-inner flex items-center justify-center p-1">
+                <div className="w-full h-full border border-amber-800/40 rounded-xs grid grid-cols-2 gap-0.5">
+                  <div className="border-r border-b border-amber-800/40"></div>
+                  <div className="border-b border-amber-800/40"></div>
+                  <div className="border-r border-amber-800/40"></div>
+                  <div></div>
+                </div>
+              </div>
 
-          <div className="pt-2 border-t border-white/15 flex items-center justify-between text-xs relative z-10">
-            <span className="font-bold px-2 py-0.5 rounded-md text-[11px] bg-emerald-400/25 text-emerald-200 border border-emerald-400/30">
-              {netBalance >= 0 ? '↑ Net Positive' : '↓ Cash Deficit'}
-            </span>
-            <span className="text-[11px] font-medium text-indigo-100">Available Funds</span>
+              {/* Total Balance on Card */}
+              <div>
+                <p className="text-[11px] uppercase font-bold tracking-wider text-zinc-400">
+                  Total Net Balance
+                </p>
+                <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white mt-0.5">
+                  {formatCurrency(netBalance)}
+                </h2>
+              </div>
+            </div>
+
+            {/* Card Footer: Cardholder, Number & VISA Logo */}
+            <div className="flex items-end justify-between relative z-10 pt-2 border-t border-white/10">
+              <div className="space-y-0.5">
+                <p className="text-[10px] uppercase font-mono text-zinc-400 tracking-wider">
+                  •••• 4050
+                </p>
+                <p className="text-xs font-bold text-zinc-200 tracking-wider uppercase">
+                  {user?.name || 'Sasindu Lakshan'}
+                </p>
+              </div>
+
+              {/* VISA Logo */}
+              <div className="text-right">
+                <span className="font-serif italic font-black text-2xl tracking-tighter text-white">
+                  VISA
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Card 2: Total Income (Frosted Glass with Crisp Emerald Green) */}
-        <div className="bg-white/80 backdrop-blur-xl border border-emerald-100/90 hover:border-emerald-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
-            <span>Total Income</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center">
-              <TrendingUp size={16} />
+        {/* RIGHT COLUMN: INCOME, EXPENSE & SAVINGS METRICS (Grouped together for clarity) */}
+        <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4.5">
+          
+          {/* Card 1: Total Income (Vibrant Emerald) */}
+          <div className="bg-white/80 backdrop-blur-xl border border-emerald-100/90 hover:border-emerald-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <span>Total Income</span>
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center">
+                <TrendingUp size={18} />
+              </div>
+            </div>
+            <div className="my-2.5">
+              <h3 className="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight">
+                + {formatCurrency(totalIncome)}
+              </h3>
+            </div>
+            <div className="pt-2 border-t border-slate-100 flex items-center text-xs font-medium text-slate-600 space-x-1.5">
+              <Calendar size={13} className="text-slate-500" />
+              <span>This Month ({incomeList.length} recorded {incomeList.length === 1 ? 'deposit' : 'deposits'})</span>
             </div>
           </div>
-          <div className="my-3">
-            <h3 className="text-2xl sm:text-3xl font-black text-emerald-600 tracking-tight">
-              + {formatCurrency(totalIncome)}
-            </h3>
-          </div>
-          <div className="pt-2 border-t border-slate-100 flex items-center text-xs font-medium text-slate-600 space-x-1.5">
-            <Calendar size={13} className="text-slate-500" />
-            <span>This Month ({incomeList.length} recorded {incomeList.length === 1 ? 'deposit' : 'deposits'})</span>
-          </div>
-        </div>
 
-        {/* Card 3: Total Expenses (Frosted Glass with Crisp Rose/Red) */}
-        <div className="bg-white/80 backdrop-blur-xl border border-rose-100/90 hover:border-rose-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
-            <span>Total Expenses</span>
-            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center">
-              <TrendingDown size={16} />
+          {/* Card 2: Total Expenses (Vibrant Rose/Coral) */}
+          <div className="bg-white/80 backdrop-blur-xl border border-rose-100/90 hover:border-rose-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <span>Total Expenses</span>
+              <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center">
+                <TrendingDown size={18} />
+              </div>
+            </div>
+            <div className="my-2.5">
+              <h3 className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight">
+                - {formatCurrency(totalExpense)}
+              </h3>
+            </div>
+            <div className="pt-2 border-t border-slate-100 flex items-center text-xs font-medium text-slate-600 space-x-1.5">
+              <Calendar size={13} className="text-slate-500" />
+              <span>This Month ({expenseList.length} spending {expenseList.length === 1 ? 'entry' : 'entries'})</span>
             </div>
           </div>
-          <div className="my-3">
-            <h3 className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight">
-              - {formatCurrency(totalExpense)}
-            </h3>
-          </div>
-          <div className="pt-2 border-t border-slate-100 flex items-center text-xs font-medium text-slate-600 space-x-1.5">
-            <Calendar size={13} className="text-slate-500" />
-            <span>This Month ({expenseList.length} spending {expenseList.length === 1 ? 'entry' : 'entries'})</span>
-          </div>
-        </div>
 
-        {/* Card 4: Savings Rate (Frosted Glass with Crisp Purple/Indigo) */}
-        <div className="bg-white/80 backdrop-blur-xl border border-purple-100/90 hover:border-purple-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
-            <span>Savings Rate</span>
-            <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center">
-              <PiggyBank size={16} />
+          {/* Card 3: Savings Rate */}
+          <div className="bg-white/80 backdrop-blur-xl border border-purple-100/90 hover:border-purple-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <span>Savings Rate</span>
+              <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center">
+                <PiggyBank size={18} />
+              </div>
+            </div>
+            <div className="my-2.5">
+              <h3 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">
+                {savingsRate}%
+              </h3>
+            </div>
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-600">
+              <span>Retained from income</span>
+              <span className="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded text-[11px]">
+                {savingsRate >= 20 ? 'Optimal' : 'Building'}
+              </span>
             </div>
           </div>
-          <div className="my-3">
-            <h3 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">
-              {savingsRate}%
-            </h3>
+
+          {/* Card 4: Net Cash Flow Status */}
+          <div className="bg-white/80 backdrop-blur-xl border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col justify-between">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <span>Cash Flow Health</span>
+              <span
+                className={`text-[11px] font-bold px-2 py-0.5 rounded-md ${
+                  netBalance >= 0
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : 'bg-rose-50 text-rose-700 border border-rose-200'
+                }`}
+              >
+                {netBalance >= 0 ? 'Surplus' : 'Deficit'}
+              </span>
+            </div>
+            <div className="my-2.5">
+              <h4
+                className={`text-xl font-bold tracking-tight ${
+                  netBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'
+                }`}
+              >
+                {netBalance >= 0 ? '+' : ''} {formatCurrency(netBalance)}
+              </h4>
+            </div>
+            <div className="pt-2 border-t border-slate-100 text-xs font-medium text-slate-500">
+              {netBalance >= 0 ? 'You are within a positive cash margin' : 'Expenses currently exceed total income'}
+            </div>
           </div>
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-600">
-            <span>Of monthly income saved</span>
-            <span className="font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded text-[11px]">
-              {savingsRate >= 20 ? 'Optimal' : 'Building'}
-            </span>
-          </div>
+
         </div>
 
       </div>

@@ -78,8 +78,8 @@ const Landing = () => {
                   <p className="text-xs text-slate-500 font-medium mt-0.5">Local Currency</p>
                 </div>
                 <div>
-                  <p className="text-2xl sm:text-3xl font-extrabold text-indigo-600">256-Bit</p>
-                  <p className="text-xs text-slate-500 font-medium mt-0.5">Data Privacy</p>
+                  <p className="text-2xl sm:text-3xl font-extrabold text-indigo-600">Zero</p>
+                  <p className="text-xs text-slate-500 font-medium mt-0.5">Ads or Fees</p>
                 </div>
               </div>
             </div>

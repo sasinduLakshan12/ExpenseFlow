@@ -19,18 +19,19 @@ import {
   PiggyBank,
   Sparkles,
   Calendar,
+  Layers,
 } from 'lucide-react';
 
-// Unified category color palette for the Spending Donut Chart
+// Cohesive, executive fintech palette for Spending categories
 const CATEGORY_COLORS = {
   'Food & Dining': '#f43f5e', // Rose
   'Rent & Housing': '#f59e0b', // Amber
-  'Transportation': '#0ea5e9', // Sky
+  'Transportation': '#3b82f6', // Royal Blue
   'Utilities & Bills': '#8b5cf6', // Violet
   'Entertainment': '#ec4899', // Pink
   'Health & Medical': '#10b981', // Emerald
-  'Shopping': '#6366f1', // Indigo
-  'Education': '#14b8a6', // Teal
+  'Shopping': '#06b6d4', // Cyan
+  'Education': '#6366f1', // Indigo
   'Other Expense': '#64748b', // Slate
 };
 
@@ -114,29 +115,29 @@ const Dashboard = () => {
 
   return (
     <div className="relative space-y-8 pt-2">
-      {/* Ambient Frosted Glass Glow Orbs */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-400/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
-      <div className="absolute top-64 left-10 w-96 h-96 bg-purple-400/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
+      {/* Ambient Soft Frosted Glass Glow Orbs */}
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+      <div className="absolute top-72 left-10 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
-      {/* Top Banner & Header */}
-      <div className="bg-white/75 backdrop-blur-xl border border-white/90 rounded-3xl p-6 sm:p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+      {/* Top Welcome Header */}
+      <div className="bg-white/80 backdrop-blur-xl border border-slate-200/70 rounded-3xl p-6 sm:p-7 shadow-[0_4px_25px_rgba(0,0,0,0.03)] flex flex-col md:flex-row md:items-center md:justify-between gap-5">
         <div>
-          <div className="inline-flex items-center space-x-2 bg-indigo-50/90 border border-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-2 shadow-2xs">
+          <div className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-2 shadow-2xs">
             <Sparkles size={13} className="text-indigo-600" />
-            <span>Income & Expense Tracker</span>
+            <span>Personal Wealth & Cash Flow Hub</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
-            Take Control of Your Finances
+            Financial Dashboard
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Real-time financial analytics, category distributions, and monthly cash flow.
+            Live overview of your earnings, expenditures, and monthly category breakdown.
           </p>
         </div>
 
         <div className="flex items-center space-x-3 shrink-0">
           <button
             onClick={() => handleOpenAddModal('expense')}
-            className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm shadow-indigo-500/25 hover:shadow-indigo-500/35 transition-all cursor-pointer text-xs sm:text-sm"
+            className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm shadow-indigo-600/25 hover:shadow-indigo-600/35 transition-all cursor-pointer text-xs sm:text-sm"
           >
             <Plus size={16} />
             <span>Add Transaction</span>
@@ -144,7 +145,7 @@ const Dashboard = () => {
           <button
             onClick={fetchDashboardData}
             title="Refresh dashboard"
-            className="p-2.5 text-slate-400 hover:text-slate-600 bg-white/90 hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors cursor-pointer shadow-2xs"
+            className="p-2.5 text-slate-400 hover:text-slate-600 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors cursor-pointer shadow-2xs"
           >
             <RefreshCw size={16} />
           </button>
@@ -168,16 +169,16 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* 1. TOP 4 FROSTED GLASS METRIC CARDS (Clear labels, never cut off, prominent totals) */}
+      {/* 1. TOP 4 HARMONIZED EXECUTIVE GLASS STAT CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
-        {/* Card 1: Total Balance (The Signature Glass Hero Card) */}
-        <div className="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-5 shadow-lg shadow-indigo-950/20 relative overflow-hidden flex flex-col justify-between border border-indigo-800/50">
+        {/* Card 1: Total Balance (The Signature Dark Glass Hero Card) */}
+        <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 text-white rounded-2xl p-5 shadow-lg shadow-slate-950/20 relative overflow-hidden flex flex-col justify-between border border-slate-800">
           <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
           <div className="flex items-center justify-between relative z-10">
-            <span className="text-xs font-bold uppercase tracking-wider text-indigo-200">
-              Total Balance
+            <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-200/90">
+              Total Net Balance
             </span>
             <div className="w-8 h-8 rounded-lg bg-white/10 text-indigo-300 flex items-center justify-center">
               <Wallet size={16} />
@@ -190,37 +191,43 @@ const Dashboard = () => {
             </h3>
           </div>
 
-          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-indigo-200/90 relative z-10">
-            <span className="font-semibold text-emerald-400">
-              {netBalance >= 0 ? '↑ Net Positive' : '↓ Deficit'}
+          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs relative z-10">
+            <span
+              className={`font-semibold px-2 py-0.5 rounded-md text-[11px] ${
+                netBalance >= 0
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+              }`}
+            >
+              {netBalance >= 0 ? '↑ Net Positive' : '↓ Cash Deficit'}
             </span>
-            <span className="text-[11px] text-indigo-300/80">Available funds</span>
+            <span className="text-[11px] text-slate-400">Available Funds</span>
           </div>
         </div>
 
-        {/* Card 2: Monthly Income */}
-        <div className="bg-white/80 backdrop-blur-xl border border-sky-100/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
-            <span>Monthly Income</span>
-            <div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
+        {/* Card 2: Monthly Income (Cohesive Emerald Green) */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200/80 hover:border-emerald-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            <span>Total Income</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
               <TrendingUp size={16} />
             </div>
           </div>
           <div className="my-3">
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-sky-600 tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-emerald-600 tracking-tight">
               + {formatCurrency(totalIncome)}
             </h3>
           </div>
-          <div className="pt-2 border-t border-slate-100/80 flex items-center text-xs text-slate-400 space-x-1">
+          <div className="pt-2 border-t border-slate-100 flex items-center text-xs text-slate-400 space-x-1.5">
             <Calendar size={13} className="text-slate-400" />
-            <span>This month ({incomeList.length} sources)</span>
+            <span>This Month ({incomeList.length} recorded {incomeList.length === 1 ? 'deposit' : 'deposits'})</span>
           </div>
         </div>
 
-        {/* Card 3: Monthly Expenses */}
-        <div className="bg-white/80 backdrop-blur-xl border border-rose-100/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
-            <span>Monthly Expenses</span>
+        {/* Card 3: Monthly Expenses (Cohesive Rose/Coral Red) */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200/80 hover:border-rose-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+            <span>Total Expenses</span>
             <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
               <TrendingDown size={16} />
             </div>
@@ -230,17 +237,17 @@ const Dashboard = () => {
               - {formatCurrency(totalExpense)}
             </h3>
           </div>
-          <div className="pt-2 border-t border-slate-100/80 flex items-center text-xs text-slate-400 space-x-1">
+          <div className="pt-2 border-t border-slate-100 flex items-center text-xs text-slate-400 space-x-1.5">
             <Calendar size={13} className="text-slate-400" />
-            <span>This month ({expenseList.length} spends)</span>
+            <span>This Month ({expenseList.length} spending {expenseList.length === 1 ? 'entry' : 'entries'})</span>
           </div>
         </div>
 
-        {/* Card 4: Savings Rate */}
-        <div className="bg-white/80 backdrop-blur-xl border border-emerald-100/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
+        {/* Card 4: Savings Rate (Cohesive Indigo / Royal Violet) */}
+        <div className="bg-white/80 backdrop-blur-xl border border-slate-200/80 hover:border-indigo-200 rounded-2xl p-5 shadow-xs hover:shadow-sm transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 uppercase tracking-wider">
             <span>Savings Rate</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
               <PiggyBank size={16} />
             </div>
           </div>
@@ -249,8 +256,11 @@ const Dashboard = () => {
               {savingsRate}%
             </h3>
           </div>
-          <div className="pt-2 border-t border-slate-100/80 flex items-center text-xs text-slate-400 space-x-1">
-            <span>% of total income retained</span>
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <span>Of monthly income saved</span>
+            <span className="font-semibold text-indigo-600 text-[11px]">
+              {savingsRate >= 20 ? 'Optimal' : 'Building'}
+            </span>
           </div>
         </div>
 
@@ -260,7 +270,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         
         {/* Left Card: Spending by Category (Interactive Donut Chart) - 6 cols */}
-        <div className="lg:col-span-6 bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl p-6 sm:p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between">
+        <div className="lg:col-span-6 bg-white/80 backdrop-blur-xl border border-slate-200/70 rounded-3xl p-6 sm:p-7 shadow-[0_4px_25px_rgba(0,0,0,0.03)] flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-800">
@@ -344,7 +354,7 @@ const Dashboard = () => {
                   <div key={cat.name} className="flex items-center justify-between sm:space-x-4 text-xs">
                     <div className="flex items-center space-x-2">
                       <span
-                        className="w-2.5 h-2.5 rounded-full shrink-0"
+                        className="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs"
                         style={{ backgroundColor: cat.color }}
                       ></span>
                       <span className="text-slate-700 font-medium">{cat.name}</span>
@@ -363,8 +373,8 @@ const Dashboard = () => {
           )}
         </div>
 
-        {/* Right Card: Monthly Overview (Comparative Income vs Expense Bar Chart) - 6 cols */}
-        <div className="lg:col-span-6 bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl p-6 sm:p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between">
+        {/* Right Card: Monthly Overview (Harmonious Emerald Income vs Rose Expense Bar Chart) - 6 cols */}
+        <div className="lg:col-span-6 bg-white/80 backdrop-blur-xl border border-slate-200/70 rounded-3xl p-6 sm:p-7 shadow-[0_4px_25px_rgba(0,0,0,0.03)] flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-800">
@@ -373,12 +383,12 @@ const Dashboard = () => {
               <p className="text-xs text-slate-400">Cash Flow: Income vs. Expenses comparison</p>
             </div>
             <div className="flex items-center space-x-3 text-xs">
-              <span className="flex items-center space-x-1.5 font-medium text-slate-600">
-                <span className="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+              <span className="flex items-center space-x-1.5 font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                 <span>Income</span>
               </span>
-              <span className="flex items-center space-x-1.5 font-medium text-slate-600">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              <span className="flex items-center space-x-1.5 font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200/60">
+                <span className="w-2 h-2 rounded-full bg-rose-500"></span>
                 <span>Expenses</span>
               </span>
             </div>
@@ -386,39 +396,39 @@ const Dashboard = () => {
 
           {/* Bar Chart Container */}
           <div className="my-auto pt-4 pb-2">
-            <div className="h-44 flex items-end justify-center space-x-10 sm:space-x-16 border-b border-slate-200/80 px-4">
+            <div className="h-44 flex items-end justify-center space-x-12 sm:space-x-20 border-b border-slate-200/80 px-4">
               
-              {/* Income Column */}
+              {/* Income Column (Emerald / Teal Gradient) */}
               <div className="flex flex-col items-center space-y-2 h-full justify-end group">
-                <span className="text-xs font-bold text-sky-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-xs font-bold text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity">
                   {formatCurrency(totalIncome)}
                 </span>
                 <div
-                  className="w-14 sm:w-16 bg-gradient-to-t from-sky-600 to-sky-400 rounded-t-xl transition-all duration-700 shadow-sm shadow-sky-500/20"
+                  className="w-14 sm:w-16 bg-gradient-to-t from-emerald-600 to-teal-400 rounded-t-xl transition-all duration-700 shadow-sm shadow-emerald-600/20"
                   style={{ height: `${incomeBarHeight}%` }}
                 ></div>
-                <span className="text-xs font-semibold text-slate-600">Income</span>
+                <span className="text-xs font-semibold text-slate-700">Income</span>
               </div>
 
-              {/* Expense Column */}
+              {/* Expense Column (Rose / Coral Gradient) */}
               <div className="flex flex-col items-center space-y-2 h-full justify-end group">
                 <span className="text-xs font-bold text-rose-600 opacity-0 group-hover:opacity-100 transition-opacity">
                   {formatCurrency(totalExpense)}
                 </span>
                 <div
-                  className="w-14 sm:w-16 bg-gradient-to-t from-rose-600 to-rose-400 rounded-t-xl transition-all duration-700 shadow-sm shadow-rose-500/20"
+                  className="w-14 sm:w-16 bg-gradient-to-t from-rose-600 to-rose-400 rounded-t-xl transition-all duration-700 shadow-sm shadow-rose-600/20"
                   style={{ height: `${expenseBarHeight}%` }}
                 ></div>
-                <span className="text-xs font-semibold text-slate-600">Expenses</span>
+                <span className="text-xs font-semibold text-slate-700">Expenses</span>
               </div>
 
             </div>
 
             {/* Bottom Status Tag */}
             <div className="pt-4 flex items-center justify-between text-xs">
-              <span className="text-slate-500">Net Difference:</span>
+              <span className="text-slate-500 font-medium">Net Monthly Cash Flow:</span>
               <span
-                className={`font-bold px-3 py-1 rounded-full ${
+                className={`font-bold px-3 py-1 rounded-full text-xs ${
                   netBalance >= 0
                     ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                     : 'bg-rose-50 text-rose-700 border border-rose-200'
@@ -433,8 +443,8 @@ const Dashboard = () => {
 
       </div>
 
-      {/* 3. BOTTOM SECTION: RECENT TRANSACTIONS (Full-width clean ledger view, no repetitive shortcuts) */}
-      <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+      {/* 3. BOTTOM SECTION: RECENT TRANSACTIONS (Full-width clean ledger view, no redundant shortcuts) */}
+      <div className="bg-white/80 backdrop-blur-xl border border-slate-200/70 rounded-3xl shadow-[0_4px_25px_rgba(0,0,0,0.03)] overflow-hidden">
         <div className="p-6 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h2 className="text-base sm:text-lg font-bold text-slate-800">Recent Transactions</h2>

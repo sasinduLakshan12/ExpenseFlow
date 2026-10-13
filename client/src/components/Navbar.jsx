@@ -13,6 +13,8 @@ import {
   X,
   ChevronDown,
   ShieldCheck,
+  Coins,
+  BadgeCheck,
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -44,71 +46,80 @@ const Navbar = () => {
   const userInitial = user?.name ? user.name.charAt(0).toUpperCase() : 'U';
 
   return (
-    <nav className="bg-white/80 backdrop-blur-xl border-b border-slate-200/70 sticky top-0 z-50 transition-all">
+    <nav className="bg-white/90 backdrop-blur-xl border-b border-slate-200/80 sticky top-0 z-50 shadow-[0_2px_15px_rgba(0,0,0,0.03)] transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           
-          {/* Logo & Brand */}
+          {/* Logo & Brand Identity */}
           <div className="flex items-center space-x-3">
-            <div className="bg-gradient-to-tr from-indigo-600 to-purple-600 text-white p-2 rounded-xl font-bold shadow-xs">
+            <div className="bg-indigo-600 text-white p-2 rounded-xl font-bold shadow-sm shadow-indigo-600/20 text-sm">
               EF
             </div>
-            <Link to="/" className="text-xl font-bold text-slate-800 tracking-tight">
+            <Link to="/" className="text-xl font-extrabold text-slate-800 tracking-tight">
               Expense<span className="text-indigo-600">Flow</span>
             </Link>
           </div>
 
-          {/* Desktop Nav Links (When Logged In) */}
+          {/* Desktop Navigation Links (Crisp & High-Contrast) */}
           {user && (
-            <div className="hidden md:flex space-x-6">
+            <div className="hidden md:flex items-center space-x-1.5 bg-slate-100/70 p-1 rounded-2xl border border-slate-200/50">
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  `flex items-center space-x-2 text-sm font-medium transition-colors ${
-                    isActive ? 'text-indigo-600 font-semibold' : 'text-slate-600 hover:text-slate-900'
+                  `flex items-center space-x-2 text-xs font-semibold px-3.5 py-1.5 rounded-xl transition-all ${
+                    isActive
+                      ? 'bg-white text-indigo-700 shadow-xs border border-slate-200/60'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                   }`
                 }
               >
-                <LayoutDashboard size={18} />
+                <LayoutDashboard size={15} />
                 <span>Dashboard</span>
               </NavLink>
               <NavLink
                 to="/transactions"
                 className={({ isActive }) =>
-                  `flex items-center space-x-2 text-sm font-medium transition-colors ${
-                    isActive ? 'text-indigo-600 font-semibold' : 'text-slate-600 hover:text-slate-900'
+                  `flex items-center space-x-2 text-xs font-semibold px-3.5 py-1.5 rounded-xl transition-all ${
+                    isActive
+                      ? 'bg-white text-indigo-700 shadow-xs border border-slate-200/60'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                   }`
                 }
               >
-                <Receipt size={18} />
+                <Receipt size={15} />
                 <span>Transactions</span>
               </NavLink>
               <NavLink
                 to="/budgets"
                 className={({ isActive }) =>
-                  `flex items-center space-x-2 text-sm font-medium transition-colors ${
-                    isActive ? 'text-indigo-600 font-semibold' : 'text-slate-600 hover:text-slate-900'
+                  `flex items-center space-x-2 text-xs font-semibold px-3.5 py-1.5 rounded-xl transition-all ${
+                    isActive
+                      ? 'bg-white text-indigo-700 shadow-xs border border-slate-200/60'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                   }`
                 }
               >
-                <Wallet size={18} />
+                <Wallet size={15} />
                 <span>Budgets</span>
               </NavLink>
             </div>
           )}
 
-          {/* Right Section: Professional User Profile Dropdown or Auth Links */}
+          {/* Right Section: Executive Profile Dropdown or Auth Buttons */}
           <div className="flex items-center space-x-3">
             {user ? (
               <div className="relative" ref={dropdownRef}>
-                {/* Profile Pill Button */}
+                {/* Profile Pill Trigger Button */}
                 <button
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
-                  className="flex items-center space-x-2.5 bg-slate-50 hover:bg-slate-100/90 border border-slate-200/80 pl-1.5 pr-3 py-1 rounded-full transition-all cursor-pointer shadow-2xs hover:border-slate-300"
+                  className="flex items-center space-x-2.5 bg-white hover:bg-slate-50 border border-slate-200 pl-1.5 pr-3 py-1 rounded-full transition-all cursor-pointer shadow-2xs hover:border-slate-300"
                 >
-                  {/* Avatar Circle with Initial */}
-                  <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center text-xs shadow-xs">
-                    {userInitial}
+                  {/* Avatar Circle with Status Indicator */}
+                  <div className="relative">
+                    <div className="w-7 h-7 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-xs shadow-xs ring-2 ring-indigo-50">
+                      {userInitial}
+                    </div>
+                    <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-500 ring-1 ring-white"></span>
                   </div>
                   <span className="text-xs sm:text-sm font-semibold text-slate-700 max-w-[120px] truncate">
                     {user.name}
@@ -116,74 +127,78 @@ const Navbar = () => {
                   <ChevronDown
                     size={14}
                     className={`text-slate-400 transition-transform duration-200 ${
-                      profileDropdownOpen ? 'rotate-180' : ''
+                      profileDropdownOpen ? 'rotate-180 text-indigo-600' : ''
                     }`}
                   />
                 </button>
 
-                {/* Professional Frosted Glass Dropdown Menu */}
+                {/* Executive Frosted Glass Profile Dropdown (New Distinct Features, No Redundant Links) */}
                 {profileDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-900/10 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    {/* User Info Header */}
-                    <div className="px-4 py-3 border-b border-slate-100 flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center text-sm shadow-xs shrink-0">
+                  <div className="absolute right-0 mt-2.5 w-72 bg-white/95 backdrop-blur-2xl border border-slate-200/90 rounded-2xl shadow-xl shadow-slate-900/10 p-3 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-3">
+                    
+                    {/* 1. User Header & Avatar */}
+                    <div className="flex items-center space-x-3 p-2 bg-slate-50/80 rounded-xl border border-slate-100">
+                      <div className="w-10 h-10 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-xs shrink-0 ring-2 ring-indigo-100">
                         {userInitial}
                       </div>
                       <div className="overflow-hidden">
-                        <p className="text-sm font-bold text-slate-800 truncate">{user.name}</p>
-                        <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                        <div className="flex items-center space-x-1.5">
+                          <p className="text-xs sm:text-sm font-bold text-slate-800 truncate">{user.name}</p>
+                          <BadgeCheck size={14} className="text-indigo-600 shrink-0" />
+                        </div>
+                        <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
                       </div>
                     </div>
 
-                    {/* Account Status Badge */}
-                    <div className="px-4 py-2 bg-indigo-50/50 mx-2 my-1.5 rounded-xl flex items-center justify-between text-[11px] text-indigo-700 font-medium">
-                      <span className="flex items-center space-x-1">
-                        <ShieldCheck size={13} className="text-indigo-600" />
-                        <span>Secure Account</span>
-                      </span>
-                      <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-semibold px-2 py-0.5 rounded-full text-[10px]">
-                        Active
-                      </span>
+                    {/* 2. Distinct Account Features & Settings (No repeated navbar links!) */}
+                    <div className="space-y-1.5 text-xs">
+                      
+                      {/* Currency Preference Feature */}
+                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/60 hover:bg-slate-50 transition-colors">
+                        <div className="flex items-center space-x-2.5 text-slate-600">
+                          <Coins size={15} className="text-amber-500" />
+                          <span className="font-medium">Currency</span>
+                        </div>
+                        <span className="font-bold text-slate-800 bg-white px-2 py-0.5 rounded-md border border-slate-200 text-[11px]">
+                          LKR (Rs)
+                        </span>
+                      </div>
+
+                      {/* Security Status Feature */}
+                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/60 hover:bg-slate-50 transition-colors">
+                        <div className="flex items-center space-x-2.5 text-slate-600">
+                          <ShieldCheck size={15} className="text-emerald-500" />
+                          <span className="font-medium">Security</span>
+                        </div>
+                        <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 text-[11px]">
+                          JWT Protected
+                        </span>
+                      </div>
+
+                      {/* Account Plan / Type */}
+                      <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50/60 hover:bg-slate-50 transition-colors">
+                        <div className="flex items-center space-x-2.5 text-slate-600">
+                          <User size={15} className="text-indigo-500" />
+                          <span className="font-medium">Account Type</span>
+                        </div>
+                        <span className="font-semibold text-slate-600 text-[11px]">
+                          Personal Tier
+                        </span>
+                      </div>
+
                     </div>
 
-                    {/* Menu Navigation Links */}
-                    <div className="py-1">
-                      <Link
-                        to="/"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center space-x-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-                      >
-                        <LayoutDashboard size={15} className="text-slate-400" />
-                        <span>Dashboard</span>
-                      </Link>
-                      <Link
-                        to="/transactions"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center space-x-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-                      >
-                        <Receipt size={15} className="text-slate-400" />
-                        <span>Transactions</span>
-                      </Link>
-                      <Link
-                        to="/budgets"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center space-x-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-                      >
-                        <Wallet size={15} className="text-slate-400" />
-                        <span>Budgets</span>
-                      </Link>
-                    </div>
-
-                    {/* Divider & Logout Button */}
-                    <div className="pt-1 border-t border-slate-100">
+                    {/* 3. Divider & Logout Action Button */}
+                    <div className="pt-2 border-t border-slate-100">
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center space-x-2.5 px-4 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50/70 transition-colors cursor-pointer text-left"
+                        className="w-full flex items-center justify-center space-x-2 bg-rose-50 hover:bg-rose-100/80 text-rose-600 font-semibold text-xs py-2.5 rounded-xl transition-all cursor-pointer"
                       >
-                        <LogOut size={15} />
+                        <LogOut size={14} />
                         <span>Sign Out of Account</span>
                       </button>
                     </div>
+
                   </div>
                 )}
               </div>

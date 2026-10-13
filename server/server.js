@@ -41,6 +41,9 @@ app.use('/api/auth', require('./routes/authRoutes'));
 // Transaction Routes (Income & Expense CRUD)
 app.use('/api/transactions', require('./routes/transactionRoutes'));
 
+// Budget Routes (Category Monthly Limits & Live Tracking)
+app.use('/api/budgets', require('./routes/budgetRoutes'));
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`🚀 ExpenseFlow Backend Server running on port ${PORT}`);

@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 // Health Check API Route
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health'], (req, res) => {
   res.status(200).json({
     status: 'OK',
     message: 'ExpenseFlow Backend API Server is running successfully!',
@@ -26,7 +26,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Project Info API Route
-app.get('/api/info', (req, res) => {
+app.get(['/api/info', '/info'], (req, res) => {
   res.status(200).json({
     appName: 'ExpenseFlow – Expense & Budget Tracker',
     team: 'Software Engineering Team 405',
@@ -36,13 +36,13 @@ app.get('/api/info', (req, res) => {
 });
 
 // Authentication Routes
-app.use('/api/auth', require('./routes/authRoutes'));
+app.use(['/api/auth', '/auth'], require('./routes/authRoutes'));
 
 // Transaction Routes (Income & Expense CRUD)
-app.use('/api/transactions', require('./routes/transactionRoutes'));
+app.use(['/api/transactions', '/transactions'], require('./routes/transactionRoutes'));
 
 // Budget Routes (Category Monthly Limits & Live Tracking)
-app.use('/api/budgets', require('./routes/budgetRoutes'));
+app.use(['/api/budgets', '/budgets'], require('./routes/budgetRoutes'));
 
 // Start Server
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {

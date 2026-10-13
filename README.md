@@ -1,40 +1,63 @@
-# 💰 ExpenseFlow – Expense & Budget Tracker
+# 💰 ExpenseFlow – Personal Expense & Budget Tracker
 
-**Software Engineering Team 405 – Individual Assignment**  
-**Project Deadline:** October 16, 2026, at 3:00 PM (Sri Lanka Time)  
+ExpenseFlow is a modern, intuitive full-stack financial management web application built with the MERN stack (MongoDB, Express, React, Node.js). It empowers users to monitor their daily expenses, track income streams, categorize financial transactions, and maintain complete visibility over their personal finances.
 
-ExpenseFlow is a modern full-stack web application designed for personal finance management, expense tracking, and monthly budget planning.
+---
+
+## ✨ Features
+
+* **Secure Authentication:** User registration and login powered by bcrypt password hashing and JSON Web Tokens (JWT).
+* **Income & Expense Management:** Seamlessly record, edit, view, and delete financial records.
+* **Smart Categorization:** Automatically categorize transactions into predefined spending categories (Food & Dining, Utilities, Entertainment, Salary, Freelance, etc.).
+* **Real-Time Search & Filtering:** Filter transactions instantly by type (Income vs Expense), category, or search keywords without page reloads.
+* **Modern Fintech UI:** Sleek, responsive interface built with Tailwind CSS, Lucide icons, and a streamlined fintech design aesthetic.
+* **Sri Lankan Rupee (LKR) Formatting:** Standardized localized currency and date formatting.
+* **Budget Planning & Analytics:** Monthly budget allocations and category-wise spending visualizer.
 
 ---
 
 ## 🛠️ Technology Stack
 
-* **Frontend:** React.js, Vite, Tailwind CSS (v4), React Router DOM (v7), Lucide Icons, Axios
-* **Backend:** Node.js, Express.js
-* **Database:** MongoDB, Mongoose (ODM)
-* **Security & Auth:** JWT (JSON Web Tokens), bcrypt.js (Day 2)
-* **Version Control:** Git & GitHub
+### Frontend
+* **Library / Framework:** React 19, Vite
+* **Styling:** Tailwind CSS, PostCSS
+* **Icons:** Lucide React
+* **Routing:** React Router DOM (v7)
+* **HTTP Client:** Axios (with automated JWT Bearer interceptor)
+
+### Backend
+* **Runtime:** Node.js
+* **Framework:** Express.js
+* **Database:** MongoDB
+* **ODM:** Mongoose
+* **Authentication & Security:** JSON Web Token (JWT), bcryptjs, CORS
 
 ---
 
-## 📁 Project Structure
+## 📁 Project Architecture
 
 ```text
-Expense & Budget Tracker/
-├── client/                 # React Frontend App (Vite)
+ExpenseFlow/
+├── client/                 # React Frontend (Vite + Tailwind CSS)
+│   ├── public/             # Static Assets & Icons
 │   ├── src/
-│   │   ├── components/     # Navbar & Shared UI Components
-│   │   ├── pages/          # Dashboard, Login, Register, Transactions, Budgets
-│   │   ├── App.jsx         # Router & Route Config
+│   │   ├── components/     # Reusable UI (Navbar, Modals, ProtectedRoute)
+│   │   ├── context/        # State Management (AuthContext)
+│   │   ├── pages/          # Views (Landing, Login, Register, Transactions, Dashboard, Budgets)
+│   │   ├── services/       # API Services (api client, transactionService)
+│   │   ├── utils/          # Helper utilities & formatters (LKR currency, dates)
+│   │   ├── App.jsx         # App Root & Client-side Routing
 │   │   └── main.jsx        # App Mount Point
 │   └── package.json
-├── server/                 # Express Backend API App
-│   ├── config/             # DB Connection (db.js)
+├── server/                 # Express Backend API
+│   ├── config/             # Database connection (db.js)
+│   ├── controllers/        # Request Handlers (authController, transactionController)
+│   ├── middleware/         # Security & JWT verification (authMiddleware)
 │   ├── models/             # Mongoose Schemas (User, Transaction, Budget)
-│   ├── server.js           # Server Entrypoint
+│   ├── routes/             # API Route Definitions (authRoutes, transactionRoutes)
+│   ├── server.js           # Express Server Entrypoint
 │   └── package.json
-├── implementation_plan.md  # Architectural Roadmap & Schedule
-└── README.md               # Documentation
+└── README.md               # Project Documentation
 ```
 
 ---
@@ -42,35 +65,55 @@ Expense & Budget Tracker/
 ## 🚀 Getting Started & Setup Instructions
 
 ### Prerequisites
-* **Node.js:** v18+ installed
-* **MongoDB:** Local MongoDB server running on `mongodb://127.0.0.1:27017`
+* [Node.js](https://nodejs.org/) (v18.x or later)
+* [MongoDB](https://www.mongodb.com/) running locally or a MongoDB Atlas connection URI
 
 ### 1. Backend Setup
-```bash
-cd server
-npm install
-npm run dev
-```
-Backend runs on: `http://localhost:5000`
+1. Open a terminal and navigate to the `server` directory:
+   ```bash
+   cd server
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the Express development server:
+   ```bash
+   npm run dev
+   ```
+   *The backend API runs on `http://localhost:5000`.*
 
 ### 2. Frontend Setup
-```bash
-cd client
-npm install
-npm run dev
-```
-Frontend runs on: `http://localhost:5173`
+1. In a new terminal, navigate to the `client` directory:
+   ```bash
+   cd client
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the Vite development server:
+   ```bash
+   npm run dev
+   ```
+   *The frontend client runs on `http://localhost:5173`.*
 
 ---
 
-## 📅 Daily Progress Log
+## 🔒 API Endpoints
 
-- [x] **Day 1 (Oct 09, 2026)**: Architecture planning, Vite + React + Tailwind + React Router setup, Express backend initialization, MongoDB + Mongoose Schemas setup, Initial Git repository structure.
-- [x] **Day 2 (Oct 10, 2026)**: User Registration, Login, JWT Authentication & Protected Routes.
-- [ ] **Day 3 (Oct 11, 2026)**: Income & Expense CRUD operations & Transaction Forms.
-- [ ] **Day 4 (Oct 12, 2026)**: Dashboard overview & Total Calculations, Search & Filter functionality.
-- [ ] **Day 5 (Oct 13, 2026)**: Monthly Budget manager & Chart visualizer.
-- [ ] **Day 6 (Oct 14, 2026)**: Responsive UI polish, Validation & Bug fixes.
-- [ ] **Day 7 (Oct 15, 2026)**: Final testing, Screenshots, GitHub polish, Demo Video recording.
-- [ ] **Day 8 (Oct 16, 2026)**: Submission before 3:00 PM.
+### Authentication
+* `POST /api/auth/register` - Register a new user account
+* `POST /api/auth/login` - Authenticate user & issue JWT token
+* `GET /api/auth/me` - Fetch currently authenticated user profile (Protected)
 
+### Transactions
+* `GET /api/transactions` - Retrieve user's transactions with optional filters (Protected)
+* `POST /api/transactions` - Create a new income or expense record (Protected)
+* `PUT /api/transactions/:id` - Update an existing transaction (Protected)
+* `DELETE /api/transactions/:id` - Remove a transaction (Protected)
+
+---
+
+## 📄 License
+This project is open-source under the [MIT License](LICENSE).

@@ -17,11 +17,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center space-x-3">
-            <div className="bg-blue-600 text-white p-2 rounded-lg font-bold">
+            <div className="bg-indigo-600 text-white p-2 rounded-xl font-bold shadow-xs">
               EF
             </div>
             <Link to="/" className="text-xl font-bold text-slate-800 tracking-tight">
-              Expense<span className="text-blue-600">Flow</span>
+              Expense<span className="text-indigo-600">Flow</span>
             </Link>
           </div>
 
@@ -31,7 +31,7 @@ const Navbar = () => {
                 to="/"
                 className={({ isActive }) =>
                   `flex items-center space-x-2 text-sm font-medium transition-colors ${
-                    isActive ? 'text-blue-600 font-semibold' : 'text-slate-600 hover:text-slate-900'
+                    isActive ? 'text-indigo-600 font-semibold' : 'text-slate-600 hover:text-slate-900'
                   }`
                 }
               >
@@ -42,7 +42,7 @@ const Navbar = () => {
                 to="/transactions"
                 className={({ isActive }) =>
                   `flex items-center space-x-2 text-sm font-medium transition-colors ${
-                    isActive ? 'text-blue-600 font-semibold' : 'text-slate-600 hover:text-slate-900'
+                    isActive ? 'text-indigo-600 font-semibold' : 'text-slate-600 hover:text-slate-900'
                   }`
                 }
               >
@@ -53,7 +53,7 @@ const Navbar = () => {
                 to="/budgets"
                 className={({ isActive }) =>
                   `flex items-center space-x-2 text-sm font-medium transition-colors ${
-                    isActive ? 'text-blue-600 font-semibold' : 'text-slate-600 hover:text-slate-900'
+                    isActive ? 'text-indigo-600 font-semibold' : 'text-slate-600 hover:text-slate-900'
                   }`
                 }
               >
@@ -67,7 +67,7 @@ const Navbar = () => {
             {user ? (
               <>
                 <div className="flex items-center space-x-2 text-sm font-medium text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg">
-                  <User size={16} className="text-blue-600" />
+                  <User size={16} className="text-indigo-600" />
                   <span>{user.name}</span>
                 </div>
                 <button
@@ -82,14 +82,14 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="flex items-center space-x-1 text-slate-600 hover:text-slate-900 text-sm font-medium px-3 py-2 rounded-lg hover:bg-slate-100 transition-colors"
+                  className="flex items-center space-x-1 text-slate-600 hover:text-slate-900 text-sm font-medium px-3.5 py-2 rounded-full hover:bg-slate-100 transition-colors"
                 >
                   <LogIn size={16} />
                   <span>Login</span>
                 </Link>
                 <Link
                   to="/register"
-                  className="flex items-center space-x-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors shadow-sm"
+                  className="flex items-center space-x-1 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4.5 py-2 rounded-full transition-all shadow-sm shadow-indigo-500/25"
                 >
                   <UserPlus size={16} />
                   <span>Register</span>

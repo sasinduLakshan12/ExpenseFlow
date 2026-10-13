@@ -18,7 +18,7 @@ const HomeRoute = () => {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="flex flex-col items-center space-y-3">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
           <p className="text-xs text-slate-400 font-medium">Loading ExpenseFlow...</p>
         </div>
       </div>

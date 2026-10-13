@@ -14,7 +14,6 @@ import {
   ArrowUpRight,
   Receipt,
   PieChart as PieChartIcon,
-  BarChart3,
   RefreshCw,
   AlertCircle,
   PiggyBank,
@@ -114,30 +113,30 @@ const Dashboard = () => {
   const recentTransactions = transactions.slice(0, 5);
 
   return (
-    <div className="relative space-y-8">
+    <div className="relative space-y-8 pt-2">
       {/* Ambient Frosted Glass Glow Orbs */}
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-indigo-400/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
       <div className="absolute top-64 left-10 w-96 h-96 bg-purple-400/15 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
       {/* Top Banner & Header */}
-      <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl p-6 sm:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div className="bg-white/75 backdrop-blur-xl border border-white/90 rounded-3xl p-6 sm:p-7 shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col md:flex-row md:items-center md:justify-between gap-5">
         <div>
-          <div className="inline-flex items-center space-x-2 bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-2">
-            <Sparkles size={14} className="text-indigo-600" />
-            <span>Income and Expense Tracker</span>
+          <div className="inline-flex items-center space-x-2 bg-indigo-50/90 border border-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full mb-2 shadow-2xs">
+            <Sparkles size={13} className="text-indigo-600" />
+            <span>Income & Expense Tracker</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
-            Welcome back, {user?.name || 'User'}! 👋
+            Take Control of Your Finances
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Take control of your finances with real-time analytics and category insights.
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Real-time financial analytics, category distributions, and monthly cash flow.
           </p>
         </div>
 
         <div className="flex items-center space-x-3 shrink-0">
           <button
             onClick={() => handleOpenAddModal('expense')}
-            className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm shadow-indigo-500/25 hover:shadow-indigo-500/35 transition-all cursor-pointer text-sm"
+            className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm shadow-indigo-500/25 hover:shadow-indigo-500/35 transition-all cursor-pointer text-xs sm:text-sm"
           >
             <Plus size={16} />
             <span>Add Transaction</span>
@@ -145,7 +144,7 @@ const Dashboard = () => {
           <button
             onClick={fetchDashboardData}
             title="Refresh dashboard"
-            className="p-2.5 text-slate-400 hover:text-slate-600 bg-white/80 hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors cursor-pointer"
+            className="p-2.5 text-slate-400 hover:text-slate-600 bg-white/90 hover:bg-slate-50 border border-slate-200 rounded-xl transition-colors cursor-pointer shadow-2xs"
           >
             <RefreshCw size={16} />
           </button>
@@ -169,82 +168,88 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* 1. TOP 4 GLASS METRIC CARDS (Inspired by clean reference design) */}
+      {/* 1. TOP 4 FROSTED GLASS METRIC CARDS (Clear labels, never cut off, prominent totals) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
-        {/* Card 1: Total Balance */}
-        <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
-            <span>Total Balance</span>
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+        {/* Card 1: Total Balance (The Signature Glass Hero Card) */}
+        <div className="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-5 shadow-lg shadow-indigo-950/20 relative overflow-hidden flex flex-col justify-between border border-indigo-800/50">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+          <div className="flex items-center justify-between relative z-10">
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-200">
+              Total Balance
+            </span>
+            <div className="w-8 h-8 rounded-lg bg-white/10 text-indigo-300 flex items-center justify-center">
               <Wallet size={16} />
             </div>
           </div>
-          <div className="my-3">
-            <h3 className="text-2xl font-extrabold text-slate-800 tracking-tight">
+
+          <div className="my-3 relative z-10">
+            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
               {formatCurrency(netBalance)}
             </h3>
           </div>
-          <div className="flex items-center text-xs font-medium text-emerald-600 space-x-1">
-            <span className={netBalance >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
-              {netBalance >= 0 ? '↑ Net Positive' : '↓ Net Deficit'}
+
+          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-indigo-200/90 relative z-10">
+            <span className="font-semibold text-emerald-400">
+              {netBalance >= 0 ? '↑ Net Positive' : '↓ Deficit'}
             </span>
-            <span className="text-slate-400">• Available funds</span>
+            <span className="text-[11px] text-indigo-300/80">Available funds</span>
           </div>
         </div>
 
         {/* Card 2: Monthly Income */}
-        <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+        <div className="bg-white/80 backdrop-blur-xl border border-sky-100/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
             <span>Monthly Income</span>
             <div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
               <TrendingUp size={16} />
             </div>
           </div>
           <div className="my-3">
-            <h3 className="text-2xl font-extrabold text-sky-600 tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-sky-600 tracking-tight">
               + {formatCurrency(totalIncome)}
             </h3>
           </div>
-          <div className="flex items-center text-xs text-slate-400 space-x-1">
+          <div className="pt-2 border-t border-slate-100/80 flex items-center text-xs text-slate-400 space-x-1">
             <Calendar size={13} className="text-slate-400" />
             <span>This month ({incomeList.length} sources)</span>
           </div>
         </div>
 
         {/* Card 3: Monthly Expenses */}
-        <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+        <div className="bg-white/80 backdrop-blur-xl border border-rose-100/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
             <span>Monthly Expenses</span>
             <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
               <TrendingDown size={16} />
             </div>
           </div>
           <div className="my-3">
-            <h3 className="text-2xl font-extrabold text-rose-600 tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-rose-600 tracking-tight">
               - {formatCurrency(totalExpense)}
             </h3>
           </div>
-          <div className="flex items-center text-xs text-slate-400 space-x-1">
+          <div className="pt-2 border-t border-slate-100/80 flex items-center text-xs text-slate-400 space-x-1">
             <Calendar size={13} className="text-slate-400" />
             <span>This month ({expenseList.length} spends)</span>
           </div>
         </div>
 
         {/* Card 4: Savings Rate */}
-        <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
-          <div className="flex items-center justify-between text-xs font-semibold text-slate-500 uppercase tracking-wider">
+        <div className="bg-white/80 backdrop-blur-xl border border-emerald-100/90 rounded-2xl p-5 shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-md transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-500 uppercase tracking-wider">
             <span>Savings Rate</span>
             <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
               <PiggyBank size={16} />
             </div>
           </div>
           <div className="my-3">
-            <h3 className="text-2xl font-extrabold text-slate-800 tracking-tight">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">
               {savingsRate}%
             </h3>
           </div>
-          <div className="flex items-center text-xs text-slate-400 space-x-1">
+          <div className="pt-2 border-t border-slate-100/80 flex items-center text-xs text-slate-400 space-x-1">
             <span>% of total income retained</span>
           </div>
         </div>
@@ -299,7 +304,7 @@ const Dashboard = () => {
                     fill="transparent"
                   />
                   {/* Donut Slices */}
-                  {categoryBreakdown.map((slice, index) => {
+                  {categoryBreakdown.map((slice) => {
                     const sliceFraction = slice.percent / 100;
                     const strokeDasharray = `${sliceFraction * circumference} ${circumference}`;
                     const strokeDashoffset = -cumulativePercent * circumference;
@@ -428,16 +433,21 @@ const Dashboard = () => {
 
       </div>
 
-      {/* 3. BOTTOM SECTION: RECENT TRANSACTIONS FEED (8 cols) & QUICK ACTIONS (4 cols) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        {/* Left Column: Recent Activity Feed (8 cols) */}
-        <div className="lg:col-span-8 bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
-          <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-            <div>
-              <h2 className="text-base sm:text-lg font-bold text-slate-800">Recent Transactions</h2>
-              <p className="text-xs text-slate-400 mt-0.5">Your latest 5 financial activities</p>
-            </div>
+      {/* 3. BOTTOM SECTION: RECENT TRANSACTIONS (Full-width clean ledger view, no repetitive shortcuts) */}
+      <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
+        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+          <div>
+            <h2 className="text-base sm:text-lg font-bold text-slate-800">Recent Transactions</h2>
+            <p className="text-xs text-slate-400 mt-0.5">Your latest financial activities</p>
+          </div>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => handleOpenAddModal('expense')}
+              className="inline-flex items-center space-x-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-xl transition-colors cursor-pointer"
+            >
+              <Plus size={14} />
+              <span>New Entry</span>
+            </button>
             <Link
               to="/transactions"
               className="inline-flex items-center space-x-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
@@ -446,131 +456,73 @@ const Dashboard = () => {
               <ArrowRight size={14} />
             </Link>
           </div>
+        </div>
 
-          {loading ? (
-            <div className="p-12 text-center">
-              <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-              <p className="text-xs text-slate-400">Loading activity...</p>
+        {loading ? (
+          <div className="p-12 text-center">
+            <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+            <p className="text-xs text-slate-400">Loading activity...</p>
+          </div>
+        ) : recentTransactions.length === 0 ? (
+          <div className="p-10 text-center space-y-3">
+            <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto">
+              <Receipt size={24} />
             </div>
-          ) : recentTransactions.length === 0 ? (
-            <div className="p-10 text-center space-y-3">
-              <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto">
-                <Receipt size={24} />
-              </div>
-              <h3 className="text-sm font-semibold text-slate-700">No transactions recorded yet</h3>
-              <p className="text-xs text-slate-400 max-w-xs mx-auto">
-                Start tracking your cash flow by adding your first income or expense entry.
-              </p>
-              <button
-                onClick={() => handleOpenAddModal('expense')}
-                className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all shadow-xs cursor-pointer"
-              >
-                <Plus size={14} />
-                <span>Add First Transaction</span>
-              </button>
-            </div>
-          ) : (
-            <div className="divide-y divide-slate-100">
-              {recentTransactions.map((item) => {
-                const isIncome = item.type === 'income';
+            <h3 className="text-sm font-semibold text-slate-700">No transactions recorded yet</h3>
+            <p className="text-xs text-slate-400 max-w-xs mx-auto">
+              Start tracking your cash flow by recording your first income or expense entry.
+            </p>
+            <button
+              onClick={() => handleOpenAddModal('expense')}
+              className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-all shadow-xs cursor-pointer"
+            >
+              <Plus size={14} />
+              <span>Add First Transaction</span>
+            </button>
+          </div>
+        ) : (
+          <div className="divide-y divide-slate-100/80">
+            {recentTransactions.map((item) => {
+              const isIncome = item.type === 'income';
 
-                return (
-                  <div
-                    key={item._id}
-                    className="p-4 sm:px-6 flex items-center justify-between hover:bg-slate-50/70 transition-colors"
-                  >
-                    <div className="flex items-center space-x-3.5">
-                      <div
-                        className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                          isIncome
-                            ? 'bg-emerald-100 text-emerald-600'
-                            : 'bg-rose-100 text-rose-600'
-                        }`}
-                      >
-                        {isIncome ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
-                      </div>
-                      <div>
-                        <p className="text-xs sm:text-sm font-semibold text-slate-800">{item.title}</p>
-                        <p className="text-[11px] text-slate-400 mt-0.5">
-                          {formatDate(item.date)} •{' '}
-                          <span className="font-medium text-slate-500">{item.category}</span>
-                        </p>
-                      </div>
+              return (
+                <div
+                  key={item._id}
+                  className="p-4 sm:px-6 flex items-center justify-between hover:bg-slate-50/70 transition-colors"
+                >
+                  <div className="flex items-center space-x-3.5">
+                    <div
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                        isIncome
+                          ? 'bg-emerald-100 text-emerald-600'
+                          : 'bg-rose-100 text-rose-600'
+                      }`}
+                    >
+                      {isIncome ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
                     </div>
-
-                    <div className="text-right">
-                      <p
-                        className={`text-xs sm:text-sm font-bold ${
-                          isIncome ? 'text-emerald-600' : 'text-rose-600'
-                        }`}
-                      >
-                        {isIncome ? '+' : '-'} {formatCurrency(item.amount)}
+                    <div>
+                      <p className="text-xs sm:text-sm font-semibold text-slate-800">{item.title}</p>
+                      <p className="text-[11px] text-slate-400 mt-0.5">
+                        {formatDate(item.date)} •{' '}
+                        <span className="font-medium text-slate-500">{item.category}</span>
                       </p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
 
-        {/* Right Column: Quick Action Cards (4 cols) */}
-        <div className="lg:col-span-4 space-y-5">
-          <div className="bg-white/80 backdrop-blur-xl border border-white/90 rounded-3xl p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-4">
-            <h3 className="text-sm font-bold text-slate-800">Quick Shortcuts</h3>
-
-            <div className="space-y-2.5">
-              <button
-                onClick={() => handleOpenAddModal('expense')}
-                className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-rose-200 bg-rose-50/40 hover:bg-rose-50/80 transition-all text-left cursor-pointer group"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center">
-                    <TrendingDown size={16} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-800">Add New Expense</p>
-                    <p className="text-[11px] text-slate-400">Record bill, groceries, etc.</p>
+                  <div className="text-right">
+                    <p
+                      className={`text-xs sm:text-sm font-bold ${
+                        isIncome ? 'text-emerald-600' : 'text-rose-600'
+                      }`}
+                    >
+                      {isIncome ? '+' : '-'} {formatCurrency(item.amount)}
+                    </p>
                   </div>
                 </div>
-                <Plus size={16} className="text-slate-400 group-hover:text-rose-600" />
-              </button>
-
-              <button
-                onClick={() => handleOpenAddModal('income')}
-                className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-sky-200 bg-sky-50/40 hover:bg-sky-50/80 transition-all text-left cursor-pointer group"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-lg bg-sky-100 text-sky-600 flex items-center justify-center">
-                    <TrendingUp size={16} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-800">Add New Income</p>
-                    <p className="text-[11px] text-slate-400">Record salary, freelance, etc.</p>
-                  </div>
-                </div>
-                <Plus size={16} className="text-slate-400 group-hover:text-sky-600" />
-              </button>
-
-              <Link
-                to="/budgets"
-                className="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-indigo-200 bg-indigo-50/40 hover:bg-indigo-50/80 transition-all text-left cursor-pointer group"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center">
-                    <PieChartIcon size={16} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-slate-800">Monthly Budgets</p>
-                    <p className="text-[11px] text-slate-400">Set limits for categories</p>
-                  </div>
-                </div>
-                <ArrowRight size={16} className="text-slate-400 group-hover:text-indigo-600" />
-              </Link>
-            </div>
+              );
+            })}
           </div>
-        </div>
-
+        )}
       </div>
 
       {/* Modal for adding transactions */}

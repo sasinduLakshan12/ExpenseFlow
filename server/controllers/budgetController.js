@@ -25,12 +25,15 @@ const getBudgets = async (req, res) => {
     const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
     const endDate = new Date(Date.UTC(year, month, 1, 0, 0, 0));
 
-    // Fetch all expense transactions for the user within this month
-    const expenses = await Transaction.find({
+    // Fetch all transactions (both income and expense) for the user within this month
+    const allTransactions = await Transaction.find({
       user: req.user._id,
-      type: 'expense',
       date: { $gte: startDate, $lt: endDate }
     });
+
+    const expenses = allTransactions.filter((tx) => tx.type === 'expense');
+    const incomes = allTransactions.filter((tx) => tx.type === 'income');
+    const totalIncome = incomes.reduce((sum, tx) => sum + tx.amount, 0);
 
     // Sum spending by category
     const categorySpending = {};
@@ -89,15 +92,20 @@ const getBudgets = async (req, res) => {
 
     const totalRemaining = Math.max(0, totalBudgeted - totalSpent);
     const overallPercentage = totalBudgeted > 0 ? Number(((totalSpent / totalBudgeted) * 100).toFixed(1)) : 0;
+    const unallocatedIncome = Math.max(0, totalIncome - totalBudgeted);
+    const incomeBudgetedPercentage = totalIncome > 0 ? Number(((totalBudgeted / totalIncome) * 100).toFixed(1)) : 0;
 
     res.status(200).json({
       success: true,
       month: selectedMonth,
       summary: {
+        totalIncome,
         totalBudgeted,
         totalSpent,
         totalRemaining,
         overallPercentage,
+        unallocatedIncome,
+        incomeBudgetedPercentage,
         budgetCount: budgets.length,
         isOverallExceeded: totalSpent > totalBudgeted && totalBudgeted > 0
       },

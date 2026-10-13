@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Wallet,
   TrendingDown,
+  TrendingUp,
   ShieldCheck,
   AlertTriangle,
   Plus,
@@ -280,47 +281,68 @@ const Budgets = () => {
         </div>
       )}
 
-      {/* 2. OVERALL MONTHLY BUDGET HEALTH CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4.5">
+      {/* 2. OVERALL MONTHLY BUDGET HEALTH & INFLOW POOL CARDS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
-        {/* Metric 1: Total Allocated */}
-        <div className="bg-white/85 backdrop-blur-xl border border-indigo-100/90 rounded-2xl p-5 shadow-2xs flex flex-col justify-between">
+        {/* Metric 1: Monthly Income Pool */}
+        <div className="bg-white/85 backdrop-blur-xl border border-emerald-100 hover:border-emerald-200 rounded-2xl p-4 sm:p-4.5 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider">
-            <span>Total Budget Allocated</span>
-            <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center">
-              <Wallet size={16} />
+            <span>Monthly Inflow</span>
+            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center">
+              <TrendingUp size={16} />
             </div>
           </div>
-          <div className="my-2.5">
-            <h3 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight">
-              {formatCurrency(summary.totalBudgeted)}
+          <div className="my-2">
+            <h3 className="text-xl sm:text-2xl font-black text-emerald-600 tracking-tight">
+              + {formatCurrency(summary.totalIncome || 0)}
             </h3>
           </div>
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-500">
-            <span>Active category limits</span>
-            <span className="font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded text-[11px]">
-              {summary.budgetCount} {summary.budgetCount === 1 ? 'Category' : 'Categories'}
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-slate-500">
+            <span>Income pool to fund budgets</span>
+            <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[10px]">
+              Available
             </span>
           </div>
         </div>
 
-        {/* Metric 2: Total Spent in Budgeted Categories */}
-        <div className="bg-white/85 backdrop-blur-xl border border-rose-100/90 rounded-2xl p-5 shadow-2xs flex flex-col justify-between">
+        {/* Metric 2: Total Budget Allocated */}
+        <div className="bg-white/85 backdrop-blur-xl border border-indigo-100 hover:border-indigo-200 rounded-2xl p-4 sm:p-4.5 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider">
-            <span>Total Spent This Month</span>
+            <span>Total Budgeted</span>
+            <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center">
+              <Wallet size={16} />
+            </div>
+          </div>
+          <div className="my-2">
+            <h3 className="text-xl sm:text-2xl font-black text-slate-800 tracking-tight">
+              {formatCurrency(summary.totalBudgeted)}
+            </h3>
+          </div>
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-slate-500">
+            <span>Active category limits</span>
+            <span className="font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded text-[10px]">
+              {summary.budgetCount} {summary.budgetCount === 1 ? 'Limit' : 'Limits'}
+            </span>
+          </div>
+        </div>
+
+        {/* Metric 3: Total Spent in Budgeted Categories */}
+        <div className="bg-white/85 backdrop-blur-xl border border-rose-100 hover:border-rose-200 rounded-2xl p-4 sm:p-4.5 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider">
+            <span>Total Spent</span>
             <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center">
               <TrendingDown size={16} />
             </div>
           </div>
-          <div className="my-2.5">
-            <h3 className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight">
+          <div className="my-2">
+            <h3 className="text-xl sm:text-2xl font-black text-rose-600 tracking-tight">
               {formatCurrency(summary.totalSpent)}
             </h3>
           </div>
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-500">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-slate-500">
             <span>Utilization rate</span>
             <span
-              className={`font-bold px-2 py-0.5 rounded text-[11px] ${
+              className={`font-bold px-2 py-0.5 rounded text-[10px] ${
                 summary.overallPercentage >= 100
                   ? 'bg-rose-50 text-rose-700'
                   : summary.overallPercentage >= 80
@@ -333,8 +355,8 @@ const Budgets = () => {
           </div>
         </div>
 
-        {/* Metric 3: Total Remaining Allowance */}
-        <div className="bg-white/85 backdrop-blur-xl border border-emerald-100/90 rounded-2xl p-5 shadow-2xs flex flex-col justify-between sm:col-span-2 lg:col-span-1">
+        {/* Metric 4: Total Remaining Allowance */}
+        <div className="bg-white/85 backdrop-blur-xl border border-slate-200/90 rounded-2xl p-4 sm:p-4.5 shadow-2xs flex flex-col justify-between">
           <div className="flex items-center justify-between text-xs font-bold text-slate-600 uppercase tracking-wider">
             <span>Remaining Allowance</span>
             <div
@@ -347,19 +369,19 @@ const Budgets = () => {
               {summary.isOverallExceeded ? <AlertTriangle size={16} /> : <ShieldCheck size={16} />}
             </div>
           </div>
-          <div className="my-2.5">
+          <div className="my-2">
             <h3
-              className={`text-2xl sm:text-3xl font-black tracking-tight ${
+              className={`text-xl sm:text-2xl font-black tracking-tight ${
                 summary.isOverallExceeded ? 'text-rose-600' : 'text-emerald-600'
               }`}
             >
               {formatCurrency(summary.totalRemaining)}
             </h3>
           </div>
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-medium text-slate-500">
+          <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-slate-500">
             <span>Monthly status</span>
             <span
-              className={`font-bold px-2 py-0.5 rounded text-[11px] ${
+              className={`font-bold px-2 py-0.5 rounded text-[10px] ${
                 summary.isOverallExceeded
                   ? 'bg-rose-50 text-rose-700'
                   : 'bg-emerald-50 text-emerald-700'
@@ -437,32 +459,54 @@ const Budgets = () => {
             ))}
           </div>
         ) : budgets.length === 0 ? (
-          /* Empty State */
-          <div className="bg-white/80 backdrop-blur-xl border border-slate-200/90 rounded-3xl p-8 sm:p-12 text-center max-w-xl mx-auto shadow-sm">
-            <div className="w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100 text-indigo-600 flex items-center justify-center mx-auto mb-4">
-              <Wallet size={28} />
+          /* Interactive Category Setup Starter Workspace (No awkward empty box) */
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-3.5 bg-indigo-50/70 border border-indigo-100 rounded-2xl">
+              <div className="flex items-center space-x-2 text-xs font-semibold text-indigo-900">
+                <Sparkles size={16} className="text-indigo-600 shrink-0" />
+                <span>
+                  Select any category below to set your spending limit for <strong>{formatMonthTitle(selectedMonth)}</strong>:
+                </span>
+              </div>
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-slate-800">
-              No budgets set for {formatMonthTitle(selectedMonth)}
-            </h3>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-md mx-auto">
-              Setting category limits helps prevent unexpected overspending and ensures your monthly savings goals stay on track.
-            </p>
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-              <button
-                onClick={() => handleOpenAddModal('Food & Dining')}
-                className="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-sm text-xs sm:text-sm cursor-pointer transition-all"
-              >
-                <Plus size={16} />
-                <span>Set Food & Dining Budget</span>
-              </button>
-              <button
-                onClick={() => handleOpenAddModal('Transportation')}
-                className="inline-flex items-center space-x-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold px-4 py-2.5 rounded-xl text-xs sm:text-sm cursor-pointer transition-all"
-              >
-                <Plus size={16} />
-                <span>Set Transport Budget</span>
-              </button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4.5">
+              {EXPENSE_CATEGORIES.map((cat) => {
+                const meta = getCategoryMeta(cat);
+                return (
+                  <div
+                    key={cat}
+                    onClick={() => handleOpenAddModal(cat)}
+                    className="bg-white/80 hover:bg-white backdrop-blur-xl border border-slate-200/80 hover:border-indigo-300 rounded-2xl p-5 transition-all shadow-2xs hover:shadow-xs cursor-pointer group flex flex-col justify-between"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2.5">
+                        <div className={`w-9 h-9 rounded-xl ${meta.bg} ${meta.text} border ${meta.border} flex items-center justify-center font-bold text-sm shrink-0 group-hover:scale-105 transition-transform`}>
+                          <Tag size={16} />
+                        </div>
+                        <div>
+                          <h4 className="text-sm font-bold text-slate-800 tracking-tight group-hover:text-indigo-600 transition-colors">
+                            {cat}
+                          </h4>
+                          <span className="text-[11px] font-medium text-slate-400">
+                            No limit configured
+                          </span>
+                        </div>
+                      </div>
+                      <span className="w-7 h-7 rounded-lg bg-slate-50 group-hover:bg-indigo-50 text-slate-400 group-hover:text-indigo-600 border border-slate-100 flex items-center justify-center transition-colors">
+                        <Plus size={14} />
+                      </span>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                      <span className="text-[11px] font-medium text-slate-400">Click to configure</span>
+                      <span className="text-xs font-bold text-indigo-600 group-hover:translate-x-0.5 transition-transform">
+                        + Set Limit
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         ) : (
@@ -581,6 +625,24 @@ const Budgets = () => {
                 </div>
               );
             })}
+
+            {/* Quick Add Another Category Card */}
+            {budgets.length < EXPENSE_CATEGORIES.length && (
+              <div
+                onClick={() => handleOpenAddModal()}
+                className="bg-white/60 hover:bg-white backdrop-blur-xl border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-2xl p-5 min-h-[190px] flex flex-col items-center justify-center text-center cursor-pointer transition-all group"
+              >
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 group-hover:bg-indigo-600 text-indigo-600 group-hover:text-white flex items-center justify-center transition-all mb-2 shadow-2xs">
+                  <Plus size={20} />
+                </div>
+                <h4 className="text-sm font-bold text-slate-700 group-hover:text-indigo-600 transition-colors">
+                  Add Another Category
+                </h4>
+                <p className="text-[11px] font-medium text-slate-400 mt-0.5">
+                  Set limit for remaining categories
+                </p>
+              </div>
+            )}
           </div>
         )}
       </div>

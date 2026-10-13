@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { X, ArrowDownCircle, ArrowUpCircle, Calendar, Tag, FileText, AlertCircle } from 'lucide-react';
+import {
+  X,
+  ArrowDownCircle,
+  ArrowUpCircle,
+  Calendar,
+  Tag,
+  FileText,
+  AlertCircle,
+  ChevronDown,
+  ListFilter,
+  Edit3,
+} from 'lucide-react';
 import { createTransaction, updateTransaction } from '../services/transactionService';
-import { INCOME_CATEGORIES, EXPENSE_CATEGORIES } from '../utils/formatters';
+import { INCOME_CATEGORIES, EXPENSE_CATEGORIES, TITLE_PRESETS } from '../utils/formatters';
 
 const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null }) => {
   const isEditing = Boolean(transactionToEdit);
 
   const [type, setType] = useState('expense');
   const [title, setTitle] = useState('');
+  const [isCustomTitle, setIsCustomTitle] = useState(false);
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState(EXPENSE_CATEGORIES[0]);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
@@ -18,20 +30,31 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
   // Sync state when editing an existing transaction or opening new
   useEffect(() => {
     if (transactionToEdit) {
-      setType(transactionToEdit.type || 'expense');
-      setTitle(transactionToEdit.title || '');
+      const editType = transactionToEdit.type || 'expense';
+      const editTitle = transactionToEdit.title || '';
+      setType(editType);
+      setTitle(editTitle);
       setAmount(transactionToEdit.amount || '');
-      setCategory(transactionToEdit.category || (transactionToEdit.type === 'income' ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0]));
+      setCategory(transactionToEdit.category || (editType === 'income' ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0]));
       setDate(
         transactionToEdit.date
           ? new Date(transactionToEdit.date).toISOString().split('T')[0]
           : new Date().toISOString().split('T')[0]
       );
       setNote(transactionToEdit.note || '');
+
+      // Check if existing title is present in current presets
+      const allPresets = (TITLE_PRESETS[editType] || []).flatMap((g) => g.titles);
+      if (editTitle && !allPresets.includes(editTitle)) {
+        setIsCustomTitle(true);
+      } else {
+        setIsCustomTitle(false);
+      }
     } else {
       // Default reset
       setType('expense');
       setTitle('');
+      setIsCustomTitle(false);
       setAmount('');
       setCategory(EXPENSE_CATEGORIES[0]);
       setDate(new Date().toISOString().split('T')[0]);
@@ -40,13 +63,33 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
     setError('');
   }, [transactionToEdit, isOpen]);
 
-  // When type changes (Income <-> Expense), switch default category
+  // When type changes (Income <-> Expense), switch default category & reset title
   const handleTypeChange = (newType) => {
     setType(newType);
+    if (!isCustomTitle) {
+      setTitle('');
+    }
     if (newType === 'income') {
       setCategory(INCOME_CATEGORIES[0]);
     } else {
       setCategory(EXPENSE_CATEGORIES[0]);
+    }
+  };
+
+  // Handle preset dropdown selection
+  const handlePresetSelect = (e) => {
+    const val = e.target.value;
+    if (val === '__custom__') {
+      setIsCustomTitle(true);
+      setTitle('');
+    } else {
+      setTitle(val);
+      // Auto-set matching category if preset belongs to a known category group
+      const groups = TITLE_PRESETS[type] || [];
+      const matched = groups.find((g) => g.titles.includes(val));
+      if (matched && matched.category) {
+        setCategory(matched.category);
+      }
     }
   };
 
@@ -154,21 +197,82 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
             </button>
           </div>
 
-          {/* Title Input */}
+          {/* Title Input / Dropdown Selector */}
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1">
-              Title / Description
-            </label>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Title / Description
+              </label>
+              <button
+                type="button"
+                onClick={() => setIsCustomTitle(!isCustomTitle)}
+                className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center space-x-1 cursor-pointer"
+              >
+                {isCustomTitle ? (
+                  <>
+                    <ListFilter size={13} />
+                    <span>Choose from List</span>
+                  </>
+                ) : (
+                  <>
+                    <Edit3 size={13} />
+                    <span>Type Custom Title</span>
+                  </>
+                )}
+              </button>
+            </div>
+
             <div className="relative">
-              <FileText className="absolute left-3 top-3 text-slate-400" size={18} />
-              <input
-                type="text"
-                required
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder={type === 'income' ? 'e.g. Monthly Salary, Freelance project' : 'e.g. Grocery shopping, Electricity bill'}
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
-              />
+              <FileText className="absolute left-3 top-3 text-slate-400 pointer-events-none" size={18} />
+              {isCustomTitle ? (
+                <div className="relative">
+                  <input
+                    type="text"
+                    required
+                    autoFocus
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder={
+                      type === 'income'
+                        ? 'e.g. Monthly Salary, Freelance project'
+                        : 'e.g. Grocery shopping, Electricity bill'
+                    }
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setIsCustomTitle(false)}
+                    title="Switch back to preset dropdown"
+                    className="absolute right-2.5 top-2.5 text-slate-400 hover:text-indigo-600 p-1 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+                  >
+                    <ListFilter size={16} />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <select
+                    required
+                    value={title}
+                    onChange={handlePresetSelect}
+                    className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="" disabled>
+                      -- Select Title / Description --
+                    </option>
+                    {(TITLE_PRESETS[type] || []).map((group) => (
+                      <optgroup key={group.category} label={group.category}>
+                        {group.titles.map((presetTitle) => (
+                          <option key={presetTitle} value={presetTitle}>
+                            {presetTitle}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
+                    <option value="__custom__">✏️ Custom / Other (Type your own)...</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-3 text-slate-400 pointer-events-none" size={18} />
+                </>
+              )}
             </div>
           </div>
 
@@ -203,7 +307,7 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all appearance-none cursor-pointer"
+                  className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all appearance-none cursor-pointer"
                 >
                   {currentCategories.map((cat) => (
                     <option key={cat} value={cat}>
@@ -211,6 +315,7 @@ const TransactionModal = ({ isOpen, onClose, onSuccess, transactionToEdit = null
                     </option>
                   ))}
                 </select>
+                <ChevronDown className="absolute right-3 top-3 text-slate-400 pointer-events-none" size={18} />
               </div>
             </div>
           </div>

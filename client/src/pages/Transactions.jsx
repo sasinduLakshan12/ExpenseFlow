@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Edit2, Trash2, ArrowUpRight, ArrowDownLeft, AlertCircle, RefreshCw, Receipt } from 'lucide-react';
+import { Plus, Search, Filter, Edit2, Trash2, ArrowUpRight, ArrowDownLeft, AlertCircle, RefreshCw, Receipt, Download, RotateCcw } from 'lucide-react';
 import { getTransactions, deleteTransaction } from '../services/transactionService';
 import { formatCurrency, formatDate, INCOME_CATEGORIES, EXPENSE_CATEGORIES } from '../utils/formatters';
 import TransactionModal from '../components/TransactionModal';
@@ -75,6 +75,39 @@ const Transactions = () => {
     return matchesSearch;
   });
 
+  const hasActiveFilters = filterType !== 'all' || filterCategory !== 'All' || searchTerm.trim() !== '';
+
+  const handleClearFilters = () => {
+    setFilterType('all');
+    setFilterCategory('All');
+    setSearchTerm('');
+  };
+
+  const handleExportCSV = () => {
+    if (filteredTransactions.length === 0) return;
+
+    const headers = ['Date', 'Title', 'Type', 'Category', 'Amount (LKR)', 'Note'];
+    const rows = filteredTransactions.map((item) => [
+      `"${formatDate(item.date)}"`,
+      `"${(item.title || '').replace(/"/g, '""')}"`,
+      `"${item.type.toUpperCase()}"`,
+      `"${(item.category || '').replace(/"/g, '""')}"`,
+      item.amount,
+      `"${(item.note || '').replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `ExpenseFlow_Transactions_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   const allAvailableCategories = ['All', ...Array.from(new Set([...INCOME_CATEGORIES, ...EXPENSE_CATEGORIES]))];
 
   return (
@@ -87,13 +120,25 @@ const Transactions = () => {
             Track, filter, and manage all your income and expense records.
           </p>
         </div>
-        <button
-          onClick={handleOpenAddModal}
-          className="inline-flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4.5 py-2.5 rounded-xl transition-all shadow-sm shadow-indigo-500/25 hover:shadow-indigo-500/35 cursor-pointer shrink-0"
-        >
-          <Plus size={18} />
-          <span>Add Transaction</span>
-        </button>
+        <div className="flex items-center gap-2.5">
+          {transactions.length > 0 && (
+            <button
+              onClick={handleExportCSV}
+              className="inline-flex items-center justify-center space-x-2 bg-white hover:bg-slate-50 text-slate-700 font-semibold px-3.5 sm:px-4 py-2.5 rounded-xl border border-slate-200 transition-all shadow-xs hover:border-slate-300 cursor-pointer shrink-0 text-sm"
+              title="Export filtered transactions to CSV"
+            >
+              <Download size={17} className="text-slate-500" />
+              <span>Export CSV</span>
+            </button>
+          )}
+          <button
+            onClick={handleOpenAddModal}
+            className="inline-flex items-center justify-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4.5 py-2.5 rounded-xl transition-all shadow-sm shadow-indigo-500/25 hover:shadow-indigo-500/35 cursor-pointer shrink-0 text-sm"
+          >
+            <Plus size={18} />
+            <span>Add Transaction</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter and Search Bar */}
@@ -143,6 +188,23 @@ const Transactions = () => {
               ))}
             </select>
           </div>
+        </div>
+
+        {/* Results Counter & Reset Filter Pill */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-2 border-t border-slate-100 text-xs text-slate-500 gap-2">
+          <div>
+            Showing <span className="font-semibold text-slate-700">{filteredTransactions.length}</span> of{' '}
+            <span className="font-semibold text-slate-700">{transactions.length}</span> transactions
+          </div>
+          {hasActiveFilters && (
+            <button
+              onClick={handleClearFilters}
+              className="inline-flex items-center space-x-1.5 text-indigo-600 hover:text-indigo-800 font-semibold hover:underline cursor-pointer self-start sm:self-auto"
+            >
+              <RotateCcw size={12} />
+              <span>Reset active filters</span>
+            </button>
+          )}
         </div>
       </div>
 

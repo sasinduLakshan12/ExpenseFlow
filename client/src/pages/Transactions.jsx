@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Search, Filter, Edit2, Trash2, ArrowUpRight, ArrowDownLeft, AlertCircle, RefreshCw, Receipt, Download, RotateCcw, FileText } from 'lucide-react';
+import { Plus, Search, Filter, Edit2, Trash2, ArrowUpRight, ArrowDownLeft, AlertCircle, RefreshCw, Receipt, RotateCcw, FileText } from 'lucide-react';
 import { getTransactions, deleteTransaction } from '../services/transactionService';
 import { formatCurrency, formatDate, INCOME_CATEGORIES, EXPENSE_CATEGORIES } from '../utils/formatters';
 import { exportTransactionsToPDF } from '../utils/pdfExport';
@@ -86,32 +86,6 @@ const Transactions = () => {
     setSearchTerm('');
   };
 
-  const handleExportCSV = () => {
-    if (filteredTransactions.length === 0) return;
-
-    const headers = ['Date', 'Title', 'Type', 'Category', 'Amount (LKR)', 'Note'];
-    const rows = filteredTransactions.map((item) => [
-      `"${formatDate(item.date)}"`,
-      `"${(item.title || '').replace(/"/g, '""')}"`,
-      `"${item.type.toUpperCase()}"`,
-      `"${(item.category || '').replace(/"/g, '""')}"`,
-      item.amount,
-      `"${(item.note || '').replace(/"/g, '""')}"`
-    ]);
-
-    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    const fileDate = new Date().toISOString().split('T')[0];
-    link.setAttribute('download', `ExpenseFlow_Transactions_${fileDate}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
   const handleExportPDF = () => {
     if (filteredTransactions.length === 0) return;
     const scopeLabel = hasActiveFilters
@@ -136,26 +110,16 @@ const Transactions = () => {
             Track, filter, and manage all your income and expense records.
           </p>
         </div>
-        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+        <div className="flex items-center gap-2.5">
           {transactions.length > 0 && (
-            <>
-              <button
-                onClick={handleExportCSV}
-                className="inline-flex items-center justify-center space-x-1.5 bg-white hover:bg-slate-50 text-slate-700 font-semibold px-3 py-2.5 rounded-xl border border-slate-200 transition-all shadow-xs hover:border-slate-300 cursor-pointer shrink-0 text-xs sm:text-sm"
-                title="Export filtered transactions to CSV"
-              >
-                <Download size={15} className="text-slate-500" />
-                <span>CSV</span>
-              </button>
-              <button
-                onClick={handleExportPDF}
-                className="inline-flex items-center justify-center space-x-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold px-3 py-2.5 rounded-xl border border-indigo-200 transition-all shadow-xs hover:border-indigo-300 cursor-pointer shrink-0 text-xs sm:text-sm"
-                title="Download official PDF financial statement"
-              >
-                <FileText size={15} className="text-indigo-600" />
-                <span>Export PDF</span>
-              </button>
-            </>
+            <button
+              onClick={handleExportPDF}
+              className="inline-flex items-center justify-center space-x-1.5 bg-white hover:bg-slate-50 text-indigo-700 font-semibold px-3.5 sm:px-4 py-2.5 rounded-xl border border-indigo-200 transition-all shadow-xs hover:border-indigo-300 cursor-pointer shrink-0 text-xs sm:text-sm"
+              title="Download official PDF financial statement"
+            >
+              <FileText size={16} className="text-indigo-600" />
+              <span>Export PDF</span>
+            </button>
           )}
           <button
             onClick={handleOpenAddModal}

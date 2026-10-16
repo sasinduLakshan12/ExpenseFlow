@@ -7,11 +7,11 @@ ExpenseFlow is a modern, intuitive full-stack financial management web applicati
 
 ## 📸 Application Screenshots
 
-### 1. Modern SaaS Landing Page
+### 1. Modern Landing Page
 A clean, distraction-free hero showcase with interactive application mockups and clear trust metrics.
 ![Landing Page](docs/screenshots/01_landing_page.png)
 
-### 2. Financial Dashboard & Luxury Card Hub
+### 2. Financial Dashboard 
 Real-time net balance widget featuring a metallic VISA Debit card, cashflow overview cards, and interactive spending distribution chart.
 ![Financial Dashboard](docs/screenshots/02_dashboard_overview.png)
 

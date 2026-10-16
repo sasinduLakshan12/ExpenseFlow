@@ -39,9 +39,9 @@ const Landing = () => {
 
               {/* Main Heading */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
-                Master Your Money.{' '}
+                Track Every Rupee.{' '}
                 <span className="block font-serif italic font-normal text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800">
-                  Build Lasting Wealth.
+                  Achieve Financial Freedom.
                 </span>
               </h1>
 

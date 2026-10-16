@@ -29,13 +29,9 @@ export const AuthProvider = ({ children }) => {
     fetchCurrentUser();
   }, []);
 
-  // Register user
+  // Register user (does not auto-login; user redirected to login)
   const register = async (name, email, password) => {
     const res = await API.post('/auth/register', { name, email, password });
-    const { token: receivedToken, ...userData } = res.data;
-    localStorage.setItem('token', receivedToken);
-    setToken(receivedToken);
-    setUser(userData);
     return res.data;
   };
 

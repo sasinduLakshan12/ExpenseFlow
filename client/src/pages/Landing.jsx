@@ -7,7 +7,6 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   Wifi,
-  Sparkles,
   ShieldCheck,
   PieChart,
 } from 'lucide-react';
@@ -30,13 +29,6 @@ const Landing = () => {
             
             {/* Left Column: Hero Text & Call to Action */}
             <div className="lg:col-span-6 space-y-6 sm:space-y-7 text-center lg:text-left">
-              
-              {/* Badge */}
-              <div className="inline-flex items-center space-x-2 bg-indigo-50/90 backdrop-blur-md border border-indigo-200/60 px-4 py-1.5 rounded-full text-xs font-semibold text-indigo-700 shadow-xs">
-                <Sparkles size={14} className="text-indigo-600" />
-                <span>Next-Gen Personal Expense & Budget Tracker</span>
-              </div>
-
               {/* Main Heading */}
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">
                 Track Every Rupee.{' '}

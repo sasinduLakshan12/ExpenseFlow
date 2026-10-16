@@ -37,7 +37,12 @@ const Register = () => {
     try {
       setLoading(true);
       await register(name, email, password);
-      navigate('/');
+      navigate('/login', {
+        state: {
+          successMessage: 'Account created successfully! Please sign in with your credentials.',
+          registeredEmail: email,
+        },
+      });
     } catch (err) {
       setError(
         err.response?.data?.message || 'Registration failed. Please try again.'

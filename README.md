@@ -2,7 +2,6 @@
 
 ExpenseFlow is a modern, intuitive full-stack financial management web application built with the MERN stack (MongoDB, Express, React, Node.js). It empowers users to monitor their daily expenses, track income streams, categorize financial transactions, enforce monthly category budgets, and maintain complete visibility over their personal finances with native Sri Lankan Rupee (`LKR`) formatting.
 
-🌐 **Live Application**: [https://expenseflow-alpha-eosin.vercel.app](https://expenseflow-alpha-eosin.vercel.app)
 
 ---
 
@@ -153,6 +152,3 @@ ExpenseFlow/
 * `DELETE /api/budgets/:id` - Delete a category budget allocation (Protected)
 
 ---
-
-## 📄 License
-This project is open-source under the [MIT License](LICENSE).
